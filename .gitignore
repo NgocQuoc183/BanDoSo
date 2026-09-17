@@ -1,0 +1,24 @@
+# Dependencies & build output
+node_modules/
+dist/
+.vite-build-*/
+*.tsbuildinfo
+
+# Secrets / môi trường — không bao giờ commit token Directus, basic-auth tile
+.env
+.env.local
+.env.*.local
+
+# Claude Code local settings (có thể chứa path/permission riêng máy)
+.claude/settings.local.json
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+
+# File tạm / debug thường phát sinh khi dev
+__pycache__/
+*.pyc
+_tmp_*

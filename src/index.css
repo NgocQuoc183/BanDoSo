@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap") layer(base);
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&icon_names=account_balance,account_tree,air,analytics,arrow_back,call,campaign,cell_tower,check_circle,chevron_left,chevron_right,close,dataset,delete_sweep,description,eco,expand_more,factory,fullscreen,groups,info,landscape,language,layers,location_city,location_on,mail,map,menu,open_in_new,person,public,rainy,science,search,sensors,share,straighten,translate,update,verified,warning,water&display=block") layer(base);
+@import "tailwindcss";
+
+@theme {
+  --font-roboto: "Be Vietnam Pro", Arial, sans-serif;
+  --font-serif: "Be Vietnam Pro", Arial, sans-serif;
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga";
+}
+
+html, body, #root { width: 100%; min-width: 0; height: 100%; margin: 0; }
+body {
+  font-family: var(--font-roboto);
+  font-size: 14px;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  background: #f3f7fb;
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 2px solid #0782c8; outline-offset: 2px; }
+
+.maplibregl-ctrl-group {
+  overflow: hidden;
+  border: 1px solid #d4e1eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgb(20 65 96 / 14%);
+}
+
+.maplibregl-ctrl-top-left { top: 3.25rem; }
+.maplibregl-ctrl-scale { border-color: #4f6f86; color: #27485f; background: rgb(255 255 255 / 80%); }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+@media (max-width: 767px) {
+  .maplibregl-ctrl-top-left { top: 3rem; }
+}
