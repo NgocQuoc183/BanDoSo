@@ -37,13 +37,13 @@ export function DataOverviewPanel({
     : null;
 
   return (
-    <section className="absolute right-4 top-4 z-10 flex max-h-[calc(100%-2rem)] w-[min(21rem,calc(100%-2rem))] flex-col overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/95 shadow-[0_8px_30px_rgba(23,38,60,0.18)] backdrop-blur-sm">
+    <section className="absolute right-4 top-4 z-10 flex max-h-[calc(100%-2rem)] w-[min(21rem,calc(100%-2rem))] flex-col overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/95 shadow-panel backdrop-blur-sm">
       <header className="flex shrink-0 items-center justify-between gap-2 border-b border-[#d5deea] bg-[#f8fafc] px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-[19px] text-[#0878bd]">analytics</span>
           <h2 className="text-sm font-bold text-[#17263c]">{t("overview.title")}</h2>
         </div>
-        <button type="button" onClick={onClose} title={t("common.close")} className="text-[#68778a] hover:text-[#0878bd]">
+        <button type="button" onClick={onClose} title={t("common.close")} className="text-[#68778a] transition-colors duration-150 hover:text-[#0878bd]">
           <span className="material-symbols-outlined text-[18px]">close</span>
         </button>
       </header>
@@ -71,7 +71,7 @@ export function DataOverviewPanel({
         </p>
       </div>
       <div className="shrink-0 border-t border-[#e8edf2] px-4 py-3">
-        <a href="/statics" className="flex h-9 items-center justify-center gap-2 rounded-md bg-[#0878bd] text-xs font-bold text-white hover:bg-[#075f9e]">
+        <a href="/statics" className="flex h-9 items-center justify-center gap-2 rounded-md bg-[#0878bd] text-xs font-bold text-white transition-colors duration-150 hover:bg-[#075f9e]">
           <span className="material-symbols-outlined text-[17px]">open_in_new</span>
           {t("overview.viewDetails")}
         </a>
@@ -98,7 +98,7 @@ function sumCounts(counts: Record<string, number | null>, collections: string[])
 export function CityInfoPanel({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   return (
-    <section className="absolute right-4 top-4 z-10 w-[25rem] max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/95 shadow-[0_8px_30px_rgba(23,38,60,0.18)] backdrop-blur-sm">
+    <section className="absolute right-4 top-4 z-10 w-[25rem] max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/95 shadow-panel backdrop-blur-sm">
       <header className="flex items-center justify-between gap-2 border-b border-[#d5deea] bg-[#f8fafc] px-4 py-3">
         <h2 className="font-serif text-base font-bold text-[#17263c]">
           {t("city.title")}
@@ -138,7 +138,7 @@ export function WardInfoPanel({
   const note = getLocalizedDataValue(ward.properties, ["GhiChu"], language);
   const usesFallback = [name, geographicPosition, committeeAddress, note].some((item) => item.value && item.isFallback);
   return (
-    <section className="absolute bottom-4 right-4 z-10 max-h-[calc(100%-2rem)] w-96 max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/95 shadow-[0_8px_30px_rgba(23,38,60,0.18)] backdrop-blur-sm">
+    <section className="absolute bottom-4 right-4 z-10 max-h-[calc(100%-2rem)] w-96 max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/95 shadow-panel backdrop-blur-sm">
       <header className="flex items-start justify-between gap-2 border-b border-[#d5deea] bg-[#f8fafc] px-4 py-3">
         <h2 className="font-serif text-base font-bold text-[#17263c]">
           {name.value || ward.label || ward.name}
@@ -175,7 +175,7 @@ export function ProjectLegendPanel({
 }) {
   const { t } = useTranslation();
   return (
-    <section className="absolute right-4 top-4 z-10 w-[22rem] max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/95 shadow-[0_8px_30px_rgba(23,38,60,0.18)] backdrop-blur-sm">
+    <section className="absolute right-4 top-4 z-10 w-[22rem] max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/95 shadow-panel backdrop-blur-sm">
       <header className="flex items-center justify-between gap-2 border-b border-[#d5deea] bg-[#f8fafc] px-4 py-3">
         <div>
           <h2 className="text-sm font-bold text-[#17263c]">
@@ -191,7 +191,7 @@ export function ProjectLegendPanel({
         {PROJECT_CATEGORIES.map((category) => (
           <label
             key={category.id}
-            className="flex cursor-pointer items-center gap-2.5 py-2 text-[11px] leading-4 text-[#29475e]"
+            className="flex cursor-pointer items-center gap-2.5 rounded-md px-1.5 py-2 text-[11px] leading-4 text-[#29475e] transition-colors duration-150 hover:bg-[#f4f8fb]"
           >
             <input
               type="checkbox"
@@ -246,7 +246,7 @@ export function ProjectInfoPanel({
     || details.some((detail) => detail.value && detail.isFallback);
 
   return (
-    <section className="absolute bottom-4 right-4 z-20 max-h-[calc(100%-2rem)] w-[28rem] max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/97 shadow-[0_10px_34px_rgba(23,38,60,0.22)] backdrop-blur-sm">
+    <section className="absolute bottom-4 right-4 z-20 max-h-[calc(100%-2rem)] w-[28rem] max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/97 shadow-panel backdrop-blur-sm">
       <header className="flex items-start justify-between gap-3 border-b border-[#d5deea] bg-[#f8fafc] px-4 py-3">
         <div className="min-w-0">
           <div className="mb-1.5 flex items-center gap-2">
@@ -303,7 +303,7 @@ function CloseButton({
       type="button"
       onClick={onClose}
       title={title ?? t("common.close")}
-      className="shrink-0 text-[#68778a] hover:text-[#0878bd]"
+      className="shrink-0 text-[#68778a] transition-colors duration-150 hover:text-[#0878bd]"
     >
       <span className="material-symbols-outlined text-[18px]">close</span>
     </button>

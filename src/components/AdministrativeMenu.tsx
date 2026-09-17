@@ -134,7 +134,7 @@ export function AdministrativeMenu({
   );
 
   return (
-    <aside className="relative flex h-full w-[17.5rem] max-w-[86vw] shrink-0 flex-col overflow-hidden border-r border-[#d5e1eb] bg-white shadow-[3px_0_14px_rgba(23,38,60,0.12)]">
+    <aside className="relative flex h-full w-[17.5rem] max-w-[86vw] shrink-0 flex-col overflow-hidden border-r border-[#d5e1eb] bg-white shadow-menu">
       <div className="flex h-11 shrink-0 items-center gap-2 bg-gradient-to-r from-[#075a9b] to-[#087fc1] px-3.5 text-white">
         <span className="material-symbols-outlined text-[18px]">layers</span>
         <h2 className="flex-1 text-[11px] font-bold uppercase tracking-[0.035em]">
@@ -145,7 +145,7 @@ export function AdministrativeMenu({
           aria-label={t("common.closeMenu")}
           title={t("common.closeMenu")}
           onClick={onClose}
-          className="flex h-8 w-8 items-center justify-center rounded hover:bg-white/15"
+          className="flex h-8 w-8 items-center justify-center rounded-md transition-colors duration-150 hover:bg-white/15"
         >
           <span className="material-symbols-outlined text-[20px]">close</span>
         </button>
@@ -169,7 +169,7 @@ export function AdministrativeMenu({
             {!loading && !error && (
               <>
                 <div
-                  className={`flex items-center gap-2 border-t border-[#edf1f5] px-3.5 py-2 text-[12px] font-medium ${citySelected ? "bg-[#eaf5fc] text-[#0769aa] shadow-[inset_3px_0_0_#0878bd]" : "text-[#29475e]"}`}
+                  className={`flex items-center gap-2 border-t border-[#edf1f5] px-3.5 py-2 text-[12px] font-medium transition-colors duration-150 ${citySelected ? "bg-[#eaf5fc] text-[#0769aa] shadow-[inset_3px_0_0_#0878bd]" : "text-[#29475e] hover:bg-[#f4f8fb]"}`}
                 >
                   <input
                     type="checkbox"
@@ -186,7 +186,7 @@ export function AdministrativeMenu({
                   </button>
                 </div>
                 <div
-                  className={`flex items-center gap-2 border-t border-[#edf1f5] px-3.5 py-2 text-[12px] font-semibold ${selectedWardId === null ? "bg-[#eaf5fc] text-[#0769aa]" : "text-[#29475e]"}`}
+                  className={`flex items-center gap-2 border-t border-[#edf1f5] px-3.5 py-2 text-[12px] font-semibold transition-colors duration-150 ${selectedWardId === null ? "bg-[#eaf5fc] text-[#0769aa]" : "text-[#29475e] hover:bg-[#f4f8fb]"}`}
                 >
                   <input
                     type="checkbox"
@@ -221,7 +221,7 @@ export function AdministrativeMenu({
           {mvtOpen && (
             <div className="bg-[#fbfdff] py-0.5">
               {mvtLayers.map((layer) => (
-                <label key={layer.collection} className="flex cursor-pointer items-start gap-2 px-3.5 py-2 text-[11px] text-[#526d82] hover:bg-[#edf6fc]">
+                <label key={layer.collection} className="flex cursor-pointer items-start gap-2 px-3.5 py-2 text-[11px] text-[#526d82] transition-colors duration-150 hover:bg-[#edf6fc]">
                   <input
                     type="checkbox"
                     checked={visibleMvtCollections.has(layer.collectionKey)}
@@ -254,7 +254,7 @@ export function AdministrativeMenu({
                 <div className="bg-[#fbfdff] py-0.5">
                   {group.id === "public" && (
                     <div
-                      className={`flex items-start gap-2 px-3.5 py-2 text-[12px] leading-4 ${projectLayerVisible ? "bg-[#eaf5fc] text-[#0769aa] shadow-[inset_3px_0_0_#0878bd]" : "text-[#526d82] hover:bg-[#edf6fc]"}`}
+                      className={`flex items-start gap-2 px-3.5 py-2 text-[12px] leading-4 transition-colors duration-150 ${projectLayerVisible ? "bg-[#eaf5fc] text-[#0769aa] shadow-[inset_3px_0_0_#0878bd]" : "text-[#526d82] hover:bg-[#edf6fc]"}`}
                     >
                       <input
                         type="checkbox"
@@ -278,7 +278,7 @@ export function AdministrativeMenu({
                       type="button"
                       key={itemKey}
                       onClick={notifyUpdating}
-                      className="flex w-full items-start gap-2 px-3.5 py-1.5 text-left text-[10px] leading-4 text-[#657b8d] hover:bg-[#edf6fc] hover:text-[#0769aa]"
+                      className="flex w-full items-start gap-2 px-3.5 py-1.5 text-left text-[10px] leading-4 text-[#657b8d] transition-colors duration-150 hover:bg-[#edf6fc] hover:text-[#0769aa]"
                     >
                       <span
                         className="mt-0.5 h-3 w-3 shrink-0  border border-[#9aabb8] bg-white"
@@ -296,7 +296,7 @@ export function AdministrativeMenu({
       {layerNotice && (
         <div
           role="status"
-          className="absolute bottom-3 left-3 right-3 z-20 flex items-center gap-2 rounded-lg bg-[#153b59] px-3 py-2.5 text-[11px] font-medium text-white shadow-lg"
+          className="absolute bottom-3 left-3 right-3 z-20 flex items-center gap-2 rounded-lg bg-[#153b59] px-3 py-2.5 text-[11px] font-medium text-white shadow-panel"
         >
           <span className="material-symbols-outlined text-[17px] text-[#8ed4ff]">
             info
@@ -325,7 +325,7 @@ function LayerHeader({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-[11px] font-semibold text-[#29475e] hover:bg-[#f4f8fb]"
+      className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-[11px] font-semibold text-[#29475e] transition-colors duration-150 hover:bg-[#f4f8fb]"
     >
       <span
         className="material-symbols-outlined shrink-0 text-[17px]"

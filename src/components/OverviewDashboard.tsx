@@ -62,9 +62,9 @@ export function OverviewDashboard() {
   const totalNotUpdated = sumStat(stats, "notUpdated");
 
   return <div className="min-h-dvh bg-[#f5f7fa] text-[#17344d]">
-    <header className="flex min-h-[4.25rem] items-center gap-4 border-b border-[#dce5ec] bg-white px-5 shadow-[0_2px_10px_rgba(15,65,101,0.07)]">
-      <a href="/" className="flex min-w-0 items-center gap-3 text-[#132e57]" title="Về bản đồ"><img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" /><span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span></a>
-      <a href="/statics" className="ml-auto flex h-9 items-center gap-2 rounded-md border border-[#d5e0e8] px-3 text-xs font-semibold text-[#526d82] hover:bg-[#f6fafc]"><span className="material-symbols-outlined text-[17px]">layers</span>Xem danh sách chi tiết</a>
+    <header className="flex min-h-[4.25rem] items-center gap-4 border-b border-[#dce5ec] bg-white px-5 shadow-header">
+      <a href="/" className="flex min-w-0 items-center gap-3 text-[#132e57] transition-opacity duration-150 hover:opacity-80" title="Về bản đồ"><img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" /><span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span></a>
+      <a href="/statics" className="ml-auto flex h-9 items-center gap-2 rounded-md border border-[#d5e0e8] px-3 text-xs font-semibold text-[#526d82] transition-colors duration-150 hover:border-[#b9cbdc] hover:bg-[#f6fafc]"><span className="material-symbols-outlined text-[17px]">layers</span>Xem danh sách chi tiết</a>
     </header>
     <main className="mx-auto max-w-[1400px] px-4 py-5 sm:px-6 lg:px-7">
       <div className="mb-4"><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#0878bd]">Thống kê</p><h1 className="mt-1 text-lg font-extrabold text-[#15324d]">Tổng quan dữ liệu số hóa</h1><p className="mt-1 text-xs text-[#718596]">Số liệu tổng hợp trực tiếp từ Directus trên {OVERVIEW_COLLECTIONS.length} collection.</p></div>
@@ -91,7 +91,7 @@ export function OverviewDashboard() {
         {loading ? <ChartSkeleton height="h-44" /> : trend.length ? <TrendLineChart data={trend} /> : <EmptyChart />}
       </ChartCard>
 
-      <section className="overflow-hidden rounded-lg border border-[#dce5eb] bg-white shadow-[0_3px_14px_rgba(23,60,88,0.05)]">
+      <section className="overflow-hidden rounded-lg border border-[#dce5eb] bg-white shadow-card">
         <div className="border-b border-[#e5edf2] px-4 py-3"><h2 className="text-sm font-bold text-[#15324d]">Tổng hợp theo lớp dữ liệu</h2></div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] border-collapse text-left text-xs">
@@ -107,7 +107,7 @@ export function OverviewDashboard() {
             <tbody className="divide-y divide-[#edf1f4]">
               {OVERVIEW_COLLECTIONS.map((item) => {
                 const stat = stats[item.collection];
-                return <tr key={item.collection} className="hover:bg-[#f4f9fc]">
+                return <tr key={item.collection} className="transition-colors duration-150 hover:bg-[#f4f9fc]">
                   <td className="px-4 py-3 font-medium text-[#29475e]">{item.label}</td>
                   <td className="px-4 py-3 text-right tabular-nums">{loading ? "…" : formatNumber(stat?.count ?? null, false)}</td>
                   <td className="px-4 py-3 text-right tabular-nums">{loading ? "…" : item.hasUpdateTracking ? formatNumber(stat?.updated ?? null, false) : <span className="text-[#c3ccd6]">—</span>}</td>
@@ -144,7 +144,7 @@ function formatDateTime(value: string | null): string {
 
 function StatTile({ icon, label, value, color }: { icon: string; label: string; value: string; color: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-[#e1e8ee] bg-white px-4 py-3.5 shadow-[0_2px_8px_rgba(23,60,88,0.04)]">
+    <div className="flex items-center gap-3 rounded-lg border border-[#e1e8ee] bg-white px-4 py-3.5 shadow-card transition-shadow duration-200 hover:shadow-card-hover">
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${color}1a`, color }}>
         <span className="material-symbols-outlined text-[20px]">{icon}</span>
       </span>
@@ -158,7 +158,7 @@ function StatTile({ icon, label, value, color }: { icon: string; label: string; 
 
 function ChartCard({ title, subtitle, className, children }: { title: string; subtitle: string; className?: string; children: React.ReactNode }) {
   return (
-    <div className={`rounded-lg border border-[#dce5eb] bg-white p-4 shadow-[0_3px_14px_rgba(23,60,88,0.05)] ${className ?? ""}`}>
+    <div className={`rounded-lg border border-[#dce5eb] bg-white p-4 shadow-card ${className ?? ""}`}>
       <h2 className="text-sm font-bold text-[#15324d]">{title}</h2>
       <p className="mb-3 text-[11px] text-[#95a6b2]">{subtitle}</p>
       {children}
@@ -182,7 +182,7 @@ function WardBarChart({ data }: { data: GroupedCount[] }) {
         <div key={item.label} className="flex items-center gap-3">
           <span className="w-36 shrink-0 truncate text-xs text-[#526d82]" title={item.label}>{item.label}</span>
           <div className="h-4 flex-1 overflow-hidden rounded-md bg-[#eef2f6]">
-            <div className="h-4 rounded-r-md bg-[#0878bd]" style={{ width: `${(item.count / max) * 100}%` }} />
+            <div className="h-4 rounded-r-md bg-[#0878bd] transition-[width] duration-500 ease-out" style={{ width: `${(item.count / max) * 100}%` }} />
           </div>
           <span className="w-16 shrink-0 text-right text-xs font-semibold tabular-nums text-[#15324d]">{item.count.toLocaleString("vi")}</span>
         </div>

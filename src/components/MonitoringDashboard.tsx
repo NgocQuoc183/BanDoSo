@@ -122,6 +122,8 @@ export function MonitoringDashboard() {
     markersRef.current.forEach((marker, id) => {
       const el = marker.getElement();
       el.style.outline = id === selectedId ? "3px solid #d71920" : "none";
+      el.style.outlineOffset = id === selectedId ? "2px" : "0";
+      el.style.borderRadius = "9999px";
       el.style.zIndex = id === selectedId ? "10" : "1";
     });
     const map = mapRef.current;
@@ -180,16 +182,16 @@ export function MonitoringDashboard() {
   };
 
   return <div className="flex h-dvh flex-col bg-[#f5f7fa] text-[#17344d]">
-    <header className="flex min-h-[4.25rem] shrink-0 items-center gap-4 border-b border-[#dce5ec] bg-white px-5 shadow-[0_2px_10px_rgba(15,65,101,0.07)]">
-      <a href="/" className="flex min-w-0 items-center gap-3 text-[#132e57]" title="Về bản đồ"><img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" /><span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span></a>
-      <a href="/statics" className="ml-auto flex h-9 items-center gap-2 rounded-md border border-[#d5e0e8] px-3 text-xs font-semibold text-[#526d82] hover:bg-[#f6fafc]"><span className="material-symbols-outlined text-[17px]">layers</span>Danh sách chi tiết</a>
+    <header className="flex min-h-[4.25rem] shrink-0 items-center gap-4 border-b border-[#dce5ec] bg-white px-5 shadow-header">
+      <a href="/" className="flex min-w-0 items-center gap-3 text-[#132e57] transition-opacity duration-150 hover:opacity-80" title="Về bản đồ"><img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" /><span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span></a>
+      <a href="/statics" className="ml-auto flex h-9 items-center gap-2 rounded-md border border-[#d5e0e8] px-3 text-xs font-semibold text-[#526d82] transition-colors duration-150 hover:border-[#b9cbdc] hover:bg-[#f6fafc]"><span className="material-symbols-outlined text-[17px]">layers</span>Danh sách chi tiết</a>
     </header>
     <div className="flex min-h-0 flex-1">
       <aside className="hidden w-[14.5rem] shrink-0 overflow-y-auto border-r border-[#e1e8ee] bg-white lg:block">
         <div className="px-5 py-5 text-[11px] font-bold uppercase tracking-wide text-[#657b8d]">Trạm quan trắc IoT</div>
         {MONITORING_STATION_TYPES.map((type, index) => (
           <button key={type.key} type="button" onClick={() => setTypeIndex(index)} className="w-full text-left">
-            <div className={`flex items-center gap-3 border-l-2 px-4 py-3 text-xs font-semibold ${index === typeIndex ? "border-[#1681c7] bg-[#edf6fc] text-[#075f9e]" : "border-transparent text-[#526d82] hover:bg-[#f6fafc]"}`}>
+            <div className={`flex items-center gap-3 border-l-2 px-4 py-3 text-xs font-semibold transition-colors duration-150 ${index === typeIndex ? "border-[#1681c7] bg-[#edf6fc] text-[#075f9e]" : "border-transparent text-[#526d82] hover:bg-[#f6fafc]"}`}>
               <span className="material-symbols-outlined text-[19px]" style={{ color: type.color }}>{type.icon}</span>
               {type.label}
             </div>
@@ -241,7 +243,7 @@ function StationListPanel({ stations, total, selectedId, onSelect, type, search,
     // "absolute" nằm trên bản đồ nên marker rơi vào vùng nó che bị chặn click.
     <div className="hidden w-[16rem] shrink-0 flex-col border-r border-[#dce5eb] bg-white sm:flex">
       <div className="border-b border-[#e5edf2] px-3.5 py-2.5">
-        <label className="flex h-9 items-center gap-2 rounded-md border border-[#d5e0e8] bg-[#fbfcfd] px-2.5 focus-within:border-[#1681c7]">
+        <label className="flex h-9 items-center gap-2 rounded-md border border-[#d5e0e8] bg-[#fbfcfd] px-2.5 transition-colors duration-150 focus-within:border-[#1681c7] focus-within:bg-white">
           <span className="material-symbols-outlined text-[16px] text-[#7892a4]">search</span>
           <input value={search} onChange={(event) => onSearchChange(event.target.value)} placeholder={`Tìm ${type.label.toLocaleLowerCase("vi")}...`} className="min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-[#95a6b2]" />
         </label>
@@ -249,7 +251,7 @@ function StationListPanel({ stations, total, selectedId, onSelect, type, search,
       </div>
       <div className="flex-1 overflow-y-auto">
         {stations.map((station) => (
-          <button key={String(station.id)} type="button" onClick={() => onSelect(String(station.id))} className={`block w-full border-b border-[#eef2f6] px-3.5 py-2.5 text-left text-xs ${selectedId === String(station.id) ? "bg-[#eaf5fc]" : "hover:bg-[#f6fafc]"}`}>
+          <button key={String(station.id)} type="button" onClick={() => onSelect(String(station.id))} className={`block w-full border-b border-[#eef2f6] px-3.5 py-2.5 text-left text-xs transition-colors duration-150 ${selectedId === String(station.id) ? "bg-[#eaf5fc] shadow-[inset_3px_0_0_#0878bd]" : "hover:bg-[#f6fafc]"}`}>
             <div className="font-semibold text-[#213e55]">{display(station.name)}</div>
             <div className="mt-0.5 text-[10px] text-[#8494a3]">{display(station.code)} · {display(station.area)}</div>
           </button>
@@ -270,7 +272,7 @@ function StationDetailPanel({ station, type, detail, loading, isWarning, onClose
   onExport: () => void;
 }) {
   return (
-    <aside className="flex w-full max-w-[24rem] shrink-0 flex-col overflow-hidden border-l border-[#dce5eb] bg-white">
+    <aside className="flex w-full max-w-[24rem] shrink-0 flex-col overflow-hidden border-l border-[#dce5eb] bg-white shadow-dock">
       <div className="flex items-start justify-between gap-3 border-b border-[#e5edf2] px-4 py-4">
         <div className="min-w-0">
           <p className="text-[10px] font-bold uppercase tracking-wide" style={{ color: type.color }}>{type.label}</p>
@@ -283,7 +285,7 @@ function StationDetailPanel({ station, type, detail, loading, isWarning, onClose
               {isWarning ? "Cảnh báo" : "Bình thường"}
             </span>
           )}
-          <button type="button" onClick={onClose} aria-label="Đóng" className="text-[#68778a] hover:text-[#0878bd]"><span className="material-symbols-outlined text-[18px]">close</span></button>
+          <button type="button" onClick={onClose} aria-label="Đóng" className="text-[#68778a] transition-colors duration-150 hover:text-[#0878bd]"><span className="material-symbols-outlined text-[18px]">close</span></button>
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
@@ -319,7 +321,7 @@ function StationDetailPanel({ station, type, detail, loading, isWarning, onClose
         </div>
       </div>
       <div className="shrink-0 border-t border-[#e5edf2] px-4 py-3">
-        <button type="button" onClick={onExport} disabled={!detail?.recent.length} className="flex h-9 w-full items-center justify-center gap-2 rounded-md bg-[#0878bd] text-xs font-bold text-white hover:bg-[#075f9e] disabled:opacity-50">
+        <button type="button" onClick={onExport} disabled={!detail?.recent.length} className="flex h-9 w-full items-center justify-center gap-2 rounded-md bg-[#0878bd] text-xs font-bold text-white transition-colors duration-150 hover:bg-[#075f9e] disabled:opacity-50">
           <span className="material-symbols-outlined text-[16px]">description</span>Xuất báo cáo
         </button>
       </div>

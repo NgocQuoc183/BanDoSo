@@ -52,13 +52,13 @@ export function AppHeader({
     else await document.documentElement.requestFullscreen();
   };
   return (
-    <header className="relative z-50 flex h-[4.5rem] shrink-0 items-center gap-3 border-b border-[#d9e4ee] bg-white px-3 shadow-[0_2px_12px_rgba(15,65,101,0.08)] sm:px-5">
+    <header className="relative z-50 flex h-[4.5rem] shrink-0 items-center gap-3 border-b border-[#d9e4ee] bg-white/95 px-3 shadow-header backdrop-blur-sm sm:px-5">
       <button
         type="button"
         aria-label={t("header.toggleMenu")}
         title={t("header.toggleMenu")}
         onClick={onMenuToggle}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-[#075f9e] hover:bg-[#edf6fc]"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-[#075f9e] transition-colors duration-150 hover:bg-[#edf6fc] active:bg-[#dcf0fc]"
       >
         <span className="material-symbols-outlined">menu</span>
       </button>
@@ -87,7 +87,7 @@ export function AppHeader({
             setSearchOpen(false);
         }}
       >
-        <label className="flex h-10 items-center gap-2 rounded-lg border border-[#d7e1ea] bg-[#f8fafc] px-3 transition focus-within:border-[#0782c8] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#0782c8]/10">
+        <label className="flex h-10 items-center gap-2 rounded-lg border border-[#d7e1ea] bg-[#f8fafc] px-3 transition-all duration-150 focus-within:border-[#0782c8] focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(7,130,200,0.1)]">
           <span className="material-symbols-outlined text-[20px] text-[#648096]">
             search
           </span>
@@ -105,14 +105,14 @@ export function AppHeader({
               type="button"
               aria-label={t("header.clearSearch")}
               onClick={() => onSearchChange("")}
-              className="text-[#7890a3]"
+              className="text-[#7890a3] transition-colors duration-150 hover:text-[#0878bd]"
             >
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
           )}
         </label>
         {searchOpen && search.trim() && (
-          <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-50 max-h-[min(28rem,70dvh)] overflow-y-auto rounded-xl border border-[#d5e1eb] bg-white shadow-[0_12px_36px_rgba(23,38,60,0.2)]">
+          <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-50 max-h-[min(28rem,70dvh)] overflow-y-auto rounded-xl border border-[#d5e1eb] bg-white shadow-panel">
             <div className="flex items-center justify-between border-b border-[#e4ebf1] px-3 py-2 text-[10px] text-[#718596]">
               <span>{t("header.searchResults")}</span>
               <span>{t("header.resultCount", { count: totalSearchResults })}</span>
@@ -181,7 +181,7 @@ export function AppHeader({
         />
       </nav>
       {notice && (
-        <div className="absolute right-5 top-[calc(100%+0.5rem)] rounded-lg bg-[#153b59] px-3 py-2 text-xs text-white shadow-lg">
+        <div className="absolute right-5 top-[calc(100%+0.5rem)] rounded-lg bg-[#153b59] px-3 py-2 text-xs text-white shadow-panel">
           {notice}
         </div>
       )}
@@ -198,7 +198,7 @@ function LanguageSwitcher({
 }) {
   const { t } = useTranslation();
   return (
-    <label className="relative flex h-10 shrink-0 items-center rounded-lg border border-[#d7e1ea] bg-white pl-2 text-[#31546e] hover:border-[#8bbbd8]">
+    <label className="relative flex h-10 shrink-0 items-center rounded-lg border border-[#d7e1ea] bg-white pl-2 text-[#31546e] transition-colors duration-150 hover:border-[#8bbbd8]">
       <span className="material-symbols-outlined text-[18px]">language</span>
       <span className="sr-only">{t("language.label")}</span>
       <select
@@ -228,7 +228,7 @@ function HeaderAction({
     <button
       type="button"
       onClick={onClick}
-      className="flex h-10 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-[#31546e] hover:bg-[#edf6fc] hover:text-[#0769aa]"
+      className="flex h-10 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-[#31546e] transition-colors duration-150 hover:bg-[#edf6fc] hover:text-[#0769aa] active:bg-[#dcf0fc]"
     >
       <span className="material-symbols-outlined text-[19px]">{icon}</span>
       {label}
@@ -239,31 +239,28 @@ function HeaderAction({
 export function AppFooter() {
   const { t } = useTranslation();
   return (
-    <footer className="relative z-40 hidden min-h-[4.75rem] shrink-0 items-center gap-5 bg-gradient-to-r from-[#07518e] to-[#0878bd] px-6 py-3 text-white md:flex">
+    <footer className="relative z-40 hidden min-h-[4.75rem] shrink-0 items-center gap-5 bg-gradient-to-r from-[#063f70] via-[#07518e] to-[#0878bd] px-6 py-3 text-white shadow-[0_-1px_0_rgba(255,255,255,0.08)] md:flex">
       <div className="flex min-w-0 items-center gap-3">
         <img
           src="/images/logo/Logo_IOC.png"
           alt="IOC Huế"
           className="h-11 w-14 rounded bg-white/95 object-contain p-1"
         />
-        <div>
-          <div className="text-sm font-bold">
-            {t("footer.organization")}
-          </div>
-         
+        <div className="text-sm font-bold tracking-wide">
+          {t("footer.organization")}
         </div>
       </div>
-      <div className="ml-auto flex shrink-0 items-center gap-5 text-xs text-white/90">
+      <div className="ml-auto flex shrink-0 items-center gap-1 text-xs text-white/85">
         <a
           href="tel:19001075"
-          className="flex items-center gap-1.5 hover:text-white"
+          className="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors duration-150 hover:bg-white/10 hover:text-white"
         >
           <span className="material-symbols-outlined text-[18px]">call</span>
           {t("footer.hotline")}
         </a>
         <a
           href="mailto:dttm@hue.gov.vn"
-          className="hidden items-center gap-1.5 hover:text-white lg:flex"
+          className="hidden items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors duration-150 hover:bg-white/10 hover:text-white lg:flex"
         >
           <span className="material-symbols-outlined text-[18px]">mail</span>
           dttm@hue.gov.vn
@@ -272,7 +269,7 @@ export function AppFooter() {
           href="https://bandoso.hue.gov.vn"
           target="_blank"
           rel="noreferrer"
-          className="hidden items-center gap-1.5 hover:text-white xl:flex"
+          className="hidden items-center gap-1.5 rounded-md px-2.5 py-1.5 transition-colors duration-150 hover:bg-white/10 hover:text-white xl:flex"
         >
           <span className="material-symbols-outlined text-[18px]">
             language
