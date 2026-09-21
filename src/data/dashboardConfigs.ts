@@ -103,6 +103,12 @@ function btsStatusLabel(item: CatalogRecord): string {
   const raw = item.operation_status;
   return typeof raw === "string" ? (BTS_STATUS_LABELS[raw] ?? raw) : "-";
 }
+function btsStatusTone(item: CatalogRecord): "success" | "danger" | "neutral" {
+  const raw = item.operation_status;
+  if (raw === "1") return "success";
+  if (raw === "2") return "danger";
+  return "neutral";
+}
 function btsWardLabel(item: CatalogRecord): string {
   const ward = item.ward;
   return ward && typeof ward === "object" ? String((ward as Record<string, unknown>).name ?? "-") : "-";
@@ -128,7 +134,7 @@ export const TELECOM_CONFIG: CollectionDashboardConfig = { title: "Hạ tầng v
     { field: "provider", label: "Nhà mạng" },
     { field: "tower_type", label: "Loại cột" },
     { field: "ward", label: "Phường, xã", render: btsWardLabel },
-    { field: "operation_status", label: "Trạng thái", render: btsStatusLabel },
+    { field: "operation_status", label: "Trạng thái", render: btsStatusLabel, tone: btsStatusTone },
   ],
   detailFields: [
     { field: "station_code", label: "Mã trạm" },

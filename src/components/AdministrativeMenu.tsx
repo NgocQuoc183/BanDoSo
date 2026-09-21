@@ -231,7 +231,7 @@ export function AdministrativeMenu({
                   <span className="mt-0.5 h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: layer.color }} />
                   <span className="min-w-0 flex-1">
                     <b className="block text-[12px] font-semibold text-[#29475e]">{layer.label}</b>
-                    <code className="block truncate text-[10px] text-[#718596]">{layer.collection}</code>
+                    {/* <code className="block truncate text-[10px] text-[#718596]">{layer.collection}</code> */}
                   </span>
                   <span className="shrink-0 text-[10px] text-[#718596]">z≥{layer.minZoom}</span>
                 </label>

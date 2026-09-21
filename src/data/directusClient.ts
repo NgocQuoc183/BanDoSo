@@ -1,9 +1,13 @@
 
 import type { DirectusCollection } from "./directusCollections";
+import type { BadgeTone } from "../components/Badge";
 export type CatalogRecord = { id?: string | number; [key: string]: unknown };
 // `render` cho phép chuẩn hoá field lưu khác tên/khác kiểu giữa các collection
 // (vd: JSON object ở collection này, chuỗi thường ở collection khác) về cùng 1 cách hiển thị.
-export type CatalogColumn = { field: string; label: string; render?: (item: CatalogRecord) => string };
+// `tone` (tuỳ chọn) đánh dấu cột trạng thái để bảng hiển thị dạng badge màu
+// thay vì chữ thường — chỉ set khi field có tập giá trị cố định (enum), không
+// áp cho các field hiện trạng tự do (chuỗi mô tả dài, không có màu chuẩn).
+export type CatalogColumn = { field: string; label: string; render?: (item: CatalogRecord) => string; tone?: (item: CatalogRecord) => BadgeTone };
 export type CatalogDetailField = string | { field: string; label: string; render?: (item: CatalogRecord) => string };
 export type CatalogCollectionConfig = {
   collection: string;

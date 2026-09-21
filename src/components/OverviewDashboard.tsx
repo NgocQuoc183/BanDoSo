@@ -61,13 +61,13 @@ export function OverviewDashboard() {
   const totalUpdated = sumStat(stats, "updated");
   const totalNotUpdated = sumStat(stats, "notUpdated");
 
-  return <div className="min-h-dvh bg-[#f5f7fa] text-[#17344d]">
-    <header className="flex min-h-[4.25rem] items-center gap-4 border-b border-[#dce5ec] bg-white px-5 shadow-header">
-      <a href="/" className="flex min-w-0 items-center gap-3 text-[#132e57] transition-opacity duration-150 hover:opacity-80" title="Về bản đồ"><img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" /><span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span></a>
-      <a href="/statics" className="ml-auto flex h-9 items-center gap-2 rounded-md border border-[#d5e0e8] px-3 text-xs font-semibold text-[#526d82] transition-colors duration-150 hover:border-[#b9cbdc] hover:bg-[#f6fafc]"><span className="material-symbols-outlined text-[17px]">layers</span>Xem danh sách chi tiết</a>
+  return <div className="min-h-dvh bg-surface text-ink-900">
+    <header className="flex min-h-[4.25rem] items-center gap-4 border-b border-line bg-white px-5 shadow-header">
+      <a href="/" className="flex min-w-0 items-center gap-3 text-ink-900 transition-opacity duration-150 hover:opacity-80" title="Về bản đồ"><img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" /><span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span></a>
+      <a href="/statics" className="ml-auto flex h-9 items-center gap-2 rounded-md border border-line px-3 text-xs font-semibold text-ink-500 transition-colors duration-150 hover:border-line-strong hover:bg-surface-muted"><span className="material-symbols-outlined text-[17px]">layers</span>Xem danh sách chi tiết</a>
     </header>
     <main className="mx-auto max-w-[1400px] px-4 py-5 sm:px-6 lg:px-7">
-      <div className="mb-4"><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#0878bd]">Thống kê</p><h1 className="mt-1 text-lg font-extrabold text-[#15324d]">Tổng quan dữ liệu số hóa</h1><p className="mt-1 text-xs text-[#718596]">Số liệu tổng hợp trực tiếp từ Directus trên {OVERVIEW_COLLECTIONS.length} collection.</p></div>
+      <div className="mb-4"><p className="text-[10px] font-bold uppercase tracking-[0.12em] text-accent">Thống kê</p><h1 className="mt-1 text-lg font-extrabold text-ink-900">Tổng quan dữ liệu số hóa</h1><p className="mt-1 text-xs text-ink-400">Số liệu tổng hợp trực tiếp từ Directus trên {OVERVIEW_COLLECTIONS.length} collection.</p></div>
 
       <div className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatTile icon="dataset" label="Tổng dữ liệu" value={formatNumber(totalRecords, loading)} color={COLOR_PRIMARY} />
@@ -91,11 +91,11 @@ export function OverviewDashboard() {
         {loading ? <ChartSkeleton height="h-44" /> : trend.length ? <TrendLineChart data={trend} /> : <EmptyChart />}
       </ChartCard>
 
-      <section className="overflow-hidden rounded-lg border border-[#dce5eb] bg-white shadow-card">
-        <div className="border-b border-[#e5edf2] px-4 py-3"><h2 className="text-sm font-bold text-[#15324d]">Tổng hợp theo lớp dữ liệu</h2></div>
+      <section className="overflow-hidden rounded-lg border border-line bg-white shadow-card">
+        <div className="border-b border-line px-4 py-3"><h2 className="text-sm font-bold text-ink-900">Tổng hợp theo lớp dữ liệu</h2></div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] border-collapse text-left text-xs">
-            <thead className="bg-[#fbfcfd] text-[10px] font-bold uppercase tracking-wide text-[#62788a]">
+            <thead className="bg-surface-muted text-[10px] font-bold uppercase tracking-wide text-ink-500">
               <tr>
                 <th className="px-4 py-3">Lớp dữ liệu</th>
                 <th className="px-4 py-3 text-right">Tổng số</th>
@@ -104,15 +104,15 @@ export function OverviewDashboard() {
                 <th className="px-4 py-3">Cập nhật cuối</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#edf1f4]">
+            <tbody className="divide-y divide-line">
               {OVERVIEW_COLLECTIONS.map((item) => {
                 const stat = stats[item.collection];
-                return <tr key={item.collection} className="transition-colors duration-150 hover:bg-[#f4f9fc]">
-                  <td className="px-4 py-3 font-medium text-[#29475e]">{item.label}</td>
+                return <tr key={item.collection} className="transition-colors duration-150 hover:bg-accent-soft">
+                  <td className="px-4 py-3 font-medium text-ink-700">{item.label}</td>
                   <td className="px-4 py-3 text-right tabular-nums">{loading ? "…" : formatNumber(stat?.count ?? null, false)}</td>
-                  <td className="px-4 py-3 text-right tabular-nums">{loading ? "…" : item.hasUpdateTracking ? formatNumber(stat?.updated ?? null, false) : <span className="text-[#c3ccd6]">—</span>}</td>
-                  <td className="px-4 py-3 text-right tabular-nums">{loading ? "…" : item.hasUpdateTracking ? formatNumber(stat?.notUpdated ?? null, false) : <span className="text-[#c3ccd6]">—</span>}</td>
-                  <td className="px-4 py-3 text-[#718596]">{loading ? "…" : formatDateTime(stat?.lastUpdated ?? null)}</td>
+                  <td className="px-4 py-3 text-right tabular-nums">{loading ? "…" : item.hasUpdateTracking ? formatNumber(stat?.updated ?? null, false) : <span className="text-ink-300">—</span>}</td>
+                  <td className="px-4 py-3 text-right tabular-nums">{loading ? "…" : item.hasUpdateTracking ? formatNumber(stat?.notUpdated ?? null, false) : <span className="text-ink-300">—</span>}</td>
+                  <td className="px-4 py-3 text-ink-400">{loading ? "…" : formatDateTime(stat?.lastUpdated ?? null)}</td>
                 </tr>;
               })}
             </tbody>
@@ -144,13 +144,13 @@ function formatDateTime(value: string | null): string {
 
 function StatTile({ icon, label, value, color }: { icon: string; label: string; value: string; color: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-[#e1e8ee] bg-white px-4 py-3.5 shadow-card transition-shadow duration-200 hover:shadow-card-hover">
+    <div className="flex items-center gap-3 rounded-lg border border-line bg-white px-4 py-3.5 shadow-card transition-shadow duration-200 hover:shadow-card-hover">
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${color}1a`, color }}>
         <span className="material-symbols-outlined text-[20px]">{icon}</span>
       </span>
       <div className="min-w-0">
-        <p className="truncate text-[11px] text-[#718596]">{label}</p>
-        <p className="text-lg font-bold text-[#15324d] tabular-nums">{value}</p>
+        <p className="truncate text-[11px] text-ink-400">{label}</p>
+        <p className="text-lg font-bold text-ink-900 tabular-nums">{value}</p>
       </div>
     </div>
   );
@@ -158,20 +158,20 @@ function StatTile({ icon, label, value, color }: { icon: string; label: string; 
 
 function ChartCard({ title, subtitle, className, children }: { title: string; subtitle: string; className?: string; children: React.ReactNode }) {
   return (
-    <div className={`rounded-lg border border-[#dce5eb] bg-white p-4 shadow-card ${className ?? ""}`}>
-      <h2 className="text-sm font-bold text-[#15324d]">{title}</h2>
-      <p className="mb-3 text-[11px] text-[#95a6b2]">{subtitle}</p>
+    <div className={`rounded-lg border border-line bg-white p-4 shadow-card ${className ?? ""}`}>
+      <h2 className="text-sm font-bold text-ink-900">{title}</h2>
+      <p className="mb-3 text-[11px] text-ink-300">{subtitle}</p>
       {children}
     </div>
   );
 }
 
 function ChartSkeleton({ height = "h-52" }: { height?: string }) {
-  return <div className={`${height} animate-pulse rounded-md bg-[#f3f6f8]`} />;
+  return <div className={`${height} animate-pulse rounded-md bg-surface-muted`} />;
 }
 
 function EmptyChart() {
-  return <div className="flex h-32 items-center justify-center text-xs text-[#95a6b2]">Chưa có dữ liệu.</div>;
+  return <div className="flex h-32 items-center justify-center text-xs text-ink-300">Chưa có dữ liệu.</div>;
 }
 
 function WardBarChart({ data }: { data: GroupedCount[] }) {
@@ -180,11 +180,11 @@ function WardBarChart({ data }: { data: GroupedCount[] }) {
     <div className="space-y-2.5">
       {data.map((item) => (
         <div key={item.label} className="flex items-center gap-3">
-          <span className="w-36 shrink-0 truncate text-xs text-[#526d82]" title={item.label}>{item.label}</span>
+          <span className="w-36 shrink-0 truncate text-xs text-ink-500" title={item.label}>{item.label}</span>
           <div className="h-4 flex-1 overflow-hidden rounded-md bg-[#eef2f6]">
-            <div className="h-4 rounded-r-md bg-[#0878bd] transition-[width] duration-500 ease-out" style={{ width: `${(item.count / max) * 100}%` }} />
+            <div className="h-4 rounded-r-md bg-accent transition-[width] duration-500 ease-out" style={{ width: `${(item.count / max) * 100}%` }} />
           </div>
-          <span className="w-16 shrink-0 text-right text-xs font-semibold tabular-nums text-[#15324d]">{item.count.toLocaleString("vi")}</span>
+          <span className="w-16 shrink-0 text-right text-xs font-semibold tabular-nums text-ink-900">{item.count.toLocaleString("vi")}</span>
         </div>
       ))}
     </div>
@@ -198,7 +198,7 @@ function UpdateDonut({ updated, notUpdated }: { updated: number; notUpdated: num
     <div className="flex items-center gap-6">
       <div className="relative h-32 w-32 shrink-0 rounded-full" style={{ background: `conic-gradient(${COLOR_PRIMARY} 0% ${updatedPct}%, ${COLOR_MUTED} ${updatedPct}% 100%)` }}>
         <div className="absolute inset-2.5 flex items-center justify-center rounded-full bg-white">
-          <span className="text-lg font-bold text-[#15324d]">{updatedPct.toFixed(0)}%</span>
+          <span className="text-lg font-bold text-ink-900">{updatedPct.toFixed(0)}%</span>
         </div>
       </div>
       <div className="space-y-2 text-xs">
@@ -213,8 +213,8 @@ function LegendRow({ color, label, value }: { color: string; label: string; valu
   return (
     <div className="flex items-center gap-2">
       <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />
-      <span className="text-[#526d82]">{label}</span>
-      <span className="font-semibold tabular-nums text-[#15324d]">{value.toLocaleString("vi")}</span>
+      <span className="text-ink-500">{label}</span>
+      <span className="font-semibold tabular-nums text-ink-900">{value.toLocaleString("vi")}</span>
     </div>
   );
 }
@@ -244,14 +244,14 @@ function TrendLineChart({ data }: { data: DailyCount[] }) {
     <svg viewBox={`0 0 ${width} ${height}`} className="w-full" role="img" aria-label="Xu hướng cập nhật theo ngày">
       {[0, 0.5, 1].map((step) => {
         const y = paddingTop + innerHeight * (1 - step);
-        return <line key={step} x1={paddingLeft} x2={width - paddingRight} y1={y} y2={y} stroke="#e5edf2" strokeWidth={1} />;
+        return <line key={step} x1={paddingLeft} x2={width - paddingRight} y1={y} y2={y} stroke="var(--color-line)" strokeWidth={1} />;
       })}
       <path d={areaPath} fill={COLOR_PRIMARY} opacity={0.1} stroke="none" />
       <path d={linePath} fill="none" stroke={COLOR_PRIMARY} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
       <circle cx={lastX} cy={lastY} r={5} fill={COLOR_PRIMARY} stroke="#ffffff" strokeWidth={2} />
-      <text x={lastX} y={lastY - 12} textAnchor="end" fontSize={11} fontWeight={700} fill="#15324d">{last.count.toLocaleString("vi")}</text>
-      <text x={paddingLeft} y={height - 4} fontSize={10} fill="#95a6b2">{formatShortDate(data[0].date)}</text>
-      <text x={width - paddingRight} y={height - 4} textAnchor="end" fontSize={10} fill="#95a6b2">{formatShortDate(last.date)}</text>
+      <text x={lastX} y={lastY - 12} textAnchor="end" fontSize={11} fontWeight={700} fill="var(--color-ink-900)">{last.count.toLocaleString("vi")}</text>
+      <text x={paddingLeft} y={height - 4} fontSize={10} fill="var(--color-ink-300)">{formatShortDate(data[0].date)}</text>
+      <text x={width - paddingRight} y={height - 4} textAnchor="end" fontSize={10} fill="var(--color-ink-300)">{formatShortDate(last.date)}</text>
     </svg>
   );
 }

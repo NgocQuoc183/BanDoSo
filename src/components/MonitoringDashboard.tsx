@@ -12,6 +12,7 @@ import {
   type StationReading,
 } from "../data/directusClient";
 import { MONITORING_RECENT_LIMIT, MONITORING_STATION_TYPES, MONITORING_TREND_HOURS, type MonitoringStationType } from "../data/monitoringConfig";
+import { Badge } from "./Badge";
 
 type StationDetail = {
   latest: StationReading | null;
@@ -36,6 +37,7 @@ export function MonitoringDashboard() {
   const [stationsLoading, setStationsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [mobileListOpen, setMobileListOpen] = useState(false);
   const [detail, setDetail] = useState<StationDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
 
@@ -181,38 +183,70 @@ export function MonitoringDashboard() {
     URL.revokeObjectURL(link.href);
   };
 
-  return <div className="flex h-dvh flex-col bg-[#f5f7fa] text-[#17344d]">
-    <header className="flex min-h-[4.25rem] shrink-0 items-center gap-4 border-b border-[#dce5ec] bg-white px-5 shadow-header">
-      <a href="/" className="flex min-w-0 items-center gap-3 text-[#132e57] transition-opacity duration-150 hover:opacity-80" title="Về bản đồ"><img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" /><span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span></a>
-      <a href="/statics" className="ml-auto flex h-9 items-center gap-2 rounded-md border border-[#d5e0e8] px-3 text-xs font-semibold text-[#526d82] transition-colors duration-150 hover:border-[#b9cbdc] hover:bg-[#f6fafc]"><span className="material-symbols-outlined text-[17px]">layers</span>Danh sách chi tiết</a>
+  const selectStation = (id: string) => { setSelectedId(id); setMobileListOpen(false); };
+
+  return <div className="flex h-dvh flex-col bg-surface text-ink-900">
+    <header className="flex min-h-[4.25rem] shrink-0 items-center gap-4 border-b border-line bg-white px-5 shadow-header">
+      <a href="/" className="flex min-w-0 items-center gap-3 text-ink-900 transition-opacity duration-150 hover:opacity-80" title="Về bản đồ"><img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" /><span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span></a>
+      <a href="/statics" className="ml-auto flex h-9 items-center gap-2 rounded-md border border-line px-3 text-xs font-semibold text-ink-500 transition-colors duration-150 hover:border-line-strong hover:bg-surface-muted"><span className="material-symbols-outlined text-[17px]">layers</span>Danh sách chi tiết</a>
     </header>
+    <div className="flex shrink-0 items-center gap-1.5 overflow-x-auto border-b border-line bg-white px-3 py-2 lg:hidden">
+      {MONITORING_STATION_TYPES.map((type, index) => (
+        <button
+          key={type.key}
+          type="button"
+          onClick={() => setTypeIndex(index)}
+          className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors duration-150 ${index === typeIndex ? "border-accent bg-accent-soft text-accent-dark" : "border-line text-ink-500 hover:border-line-strong hover:bg-surface-muted"}`}
+        >
+          <span className="material-symbols-outlined text-[16px]" style={{ color: type.color }}>{type.icon}</span>
+          {type.label}
+        </button>
+      ))}
+      <button type="button" onClick={() => setMobileListOpen(true)} className="ml-auto flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-line px-3 py-1.5 text-xs font-semibold text-ink-500 transition-colors duration-150 hover:border-line-strong hover:bg-surface-muted">
+        <span className="material-symbols-outlined text-[16px]">layers</span>
+        Danh sách ({filteredStations.length})
+      </button>
+    </div>
     <div className="flex min-h-0 flex-1">
-      <aside className="hidden w-[14.5rem] shrink-0 overflow-y-auto border-r border-[#e1e8ee] bg-white lg:block">
-        <div className="px-5 py-5 text-[11px] font-bold uppercase tracking-wide text-[#657b8d]">Trạm quan trắc IoT</div>
+      <aside className="hidden w-[14.5rem] shrink-0 overflow-y-auto border-r border-line bg-white lg:block">
+        <div className="px-5 py-5 text-[11px] font-bold uppercase tracking-wide text-ink-500">Trạm quan trắc IoT</div>
         {MONITORING_STATION_TYPES.map((type, index) => (
           <button key={type.key} type="button" onClick={() => setTypeIndex(index)} className="w-full text-left">
-            <div className={`flex items-center gap-3 border-l-2 px-4 py-3 text-xs font-semibold transition-colors duration-150 ${index === typeIndex ? "border-[#1681c7] bg-[#edf6fc] text-[#075f9e]" : "border-transparent text-[#526d82] hover:bg-[#f6fafc]"}`}>
+            <div className={`flex items-center gap-3 border-l-2 px-4 py-3 text-xs font-semibold transition-colors duration-150 ${index === typeIndex ? "border-accent bg-accent-soft text-accent-dark" : "border-transparent text-ink-500 hover:bg-surface-muted"}`}>
               <span className="material-symbols-outlined text-[19px]" style={{ color: type.color }}>{type.icon}</span>
               {type.label}
             </div>
           </button>
         ))}
-        <div className="border-t border-[#edf1f4] px-5 py-4 text-xs text-[#718596]"><span className="material-symbols-outlined mr-2 align-middle text-[16px]">arrow_back</span><a href="/">Về bản đồ</a></div>
+        <div className="border-t border-line px-5 py-4 text-xs text-ink-400"><span className="material-symbols-outlined mr-2 align-middle text-[16px]">arrow_back</span><a href="/">Về bản đồ</a></div>
       </aside>
       {!stationsLoading && (
         <StationListPanel
           stations={filteredStations}
           total={stations.length}
           selectedId={selectedId}
-          onSelect={setSelectedId}
+          onSelect={selectStation}
           type={activeType}
           search={search}
           onSearchChange={setSearch}
         />
       )}
+      {!stationsLoading && mobileListOpen && (
+        <StationListPanel
+          stations={filteredStations}
+          total={stations.length}
+          selectedId={selectedId}
+          onSelect={selectStation}
+          type={activeType}
+          search={search}
+          onSearchChange={setSearch}
+          variant="sheet"
+          onClose={() => setMobileListOpen(false)}
+        />
+      )}
       <main ref={mainRef} className="relative min-w-0 flex-1">
         <div ref={containerRef} className="h-full w-full" />
-        {stationsLoading && <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-white/50"><div className="h-8 w-8 animate-spin rounded-full border-2 border-[#0878bd] border-t-transparent" /></div>}
+        {stationsLoading && <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-white/50"><div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" /></div>}
       </main>
       {selectedStation && (
         <StationDetailPanel
@@ -229,7 +263,7 @@ export function MonitoringDashboard() {
   </div>;
 }
 
-function StationListPanel({ stations, total, selectedId, onSelect, type, search, onSearchChange }: {
+function StationListPanel({ stations, total, selectedId, onSelect, type, search, onSearchChange, variant = "sidebar", onClose }: {
   stations: CatalogRecord[];
   total: number;
   selectedId: string | null;
@@ -237,26 +271,42 @@ function StationListPanel({ stations, total, selectedId, onSelect, type, search,
   type: MonitoringStationType;
   search: string;
   onSearchChange: (value: string) => void;
+  // "sidebar" = cột cố định cạnh bản đồ (desktop, >=lg). "sheet" = lớp phủ toàn
+  // màn hình cho mobile/tablet (<lg) — ở các cỡ đó sidebar bị ẩn nên người
+  // dùng cần cách khác để đổi trạm, mở qua nút "Danh sách" trong thanh trên.
+  variant?: "sidebar" | "sheet";
+  onClose?: () => void;
 }) {
-  return (
+  const wrapperClass = variant === "sheet"
+    ? "fixed inset-y-[4.25rem] inset-x-0 z-30 flex flex-col bg-white lg:hidden"
     // Cột layout thật (không phải overlay đè lên bản đồ) — trước đây panel này
     // "absolute" nằm trên bản đồ nên marker rơi vào vùng nó che bị chặn click.
-    <div className="hidden w-[16rem] shrink-0 flex-col border-r border-[#dce5eb] bg-white sm:flex">
-      <div className="border-b border-[#e5edf2] px-3.5 py-2.5">
-        <label className="flex h-9 items-center gap-2 rounded-md border border-[#d5e0e8] bg-[#fbfcfd] px-2.5 transition-colors duration-150 focus-within:border-[#1681c7] focus-within:bg-white">
-          <span className="material-symbols-outlined text-[16px] text-[#7892a4]">search</span>
-          <input value={search} onChange={(event) => onSearchChange(event.target.value)} placeholder={`Tìm ${type.label.toLocaleLowerCase("vi")}...`} className="min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-[#95a6b2]" />
+    : "hidden w-[16rem] shrink-0 flex-col border-r border-line bg-white lg:flex";
+  return (
+    <div className={wrapperClass}>
+      {variant === "sheet" && (
+        <div className="flex shrink-0 items-center justify-between border-b border-line px-3.5 py-2.5">
+          <span className="text-xs font-bold text-ink-900">Chọn {type.label.toLocaleLowerCase("vi")}</span>
+          <button type="button" onClick={onClose} aria-label="Đóng" className="text-ink-400 transition-colors duration-150 hover:text-accent">
+            <span className="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
+      )}
+      <div className="shrink-0 border-b border-line px-3.5 py-2.5">
+        <label className="flex h-9 items-center gap-2 rounded-md border border-line bg-surface-muted px-2.5 transition-colors duration-150 focus-within:border-accent focus-within:bg-white">
+          <span className="material-symbols-outlined text-[16px] text-ink-400">search</span>
+          <input value={search} onChange={(event) => onSearchChange(event.target.value)} placeholder={`Tìm ${type.label.toLocaleLowerCase("vi")}...`} className="min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-ink-300" />
         </label>
-        <p className="mt-2 text-[11px] font-semibold text-[#657b8d]">{stations.length}/{total} {type.label.toLocaleLowerCase("vi")}</p>
+        <p className="mt-2 text-[11px] font-semibold text-ink-500">{stations.length}/{total} {type.label.toLocaleLowerCase("vi")}</p>
       </div>
       <div className="flex-1 overflow-y-auto">
         {stations.map((station) => (
-          <button key={String(station.id)} type="button" onClick={() => onSelect(String(station.id))} className={`block w-full border-b border-[#eef2f6] px-3.5 py-2.5 text-left text-xs transition-colors duration-150 ${selectedId === String(station.id) ? "bg-[#eaf5fc] shadow-[inset_3px_0_0_#0878bd]" : "hover:bg-[#f6fafc]"}`}>
-            <div className="font-semibold text-[#213e55]">{display(station.name)}</div>
-            <div className="mt-0.5 text-[10px] text-[#8494a3]">{display(station.code)} · {display(station.area)}</div>
+          <button key={String(station.id)} type="button" onClick={() => onSelect(String(station.id))} className={`block w-full border-b border-line px-3.5 py-2.5 text-left text-xs transition-colors duration-150 ${selectedId === String(station.id) ? "bg-accent-soft shadow-[inset_3px_0_0_var(--color-accent)]" : "hover:bg-surface-muted"}`}>
+            <div className="font-semibold text-ink-700">{display(station.name)}</div>
+            <div className="mt-0.5 text-[10px] text-ink-400">{display(station.code)} · {display(station.area)}</div>
           </button>
         ))}
-        {stations.length === 0 && <p className="px-3.5 py-4 text-xs text-[#95a6b2]">Không tìm thấy trạm phù hợp.</p>}
+        {stations.length === 0 && <p className="px-3.5 py-4 text-xs text-ink-300">Không tìm thấy trạm phù hợp.</p>}
       </div>
     </div>
   );
@@ -272,56 +322,60 @@ function StationDetailPanel({ station, type, detail, loading, isWarning, onClose
   onExport: () => void;
 }) {
   return (
-    <aside className="flex w-full max-w-[24rem] shrink-0 flex-col overflow-hidden border-l border-[#dce5eb] bg-white shadow-dock">
-      <div className="flex items-start justify-between gap-3 border-b border-[#e5edf2] px-4 py-4">
+    // Overlay toàn màn hình dưới lg (sidebar loại trạm + danh sách đã ẩn ở cỡ
+    // này) để tránh việc panel "w-full" làm vỡ layout khi vẫn nằm chung hàng
+    // flex với bản đồ trên màn hình hẹp; từ lg trở lên quay lại làm cột cạnh
+    // bản đồ như cũ.
+    <aside className="fixed inset-y-[4.25rem] inset-x-0 z-30 flex flex-col overflow-hidden bg-white shadow-dock lg:static lg:inset-auto lg:z-auto lg:w-full lg:max-w-[24rem] lg:shrink-0 lg:border-l lg:border-line">
+      <div className="flex items-start justify-between gap-3 border-b border-line px-4 py-4">
         <div className="min-w-0">
           <p className="text-[10px] font-bold uppercase tracking-wide" style={{ color: type.color }}>{type.label}</p>
-          <h2 className="mt-1 truncate text-sm font-extrabold text-[#15324d]">{display(station.name)}</h2>
+          <h2 className="mt-1 truncate text-sm font-extrabold text-ink-900">{display(station.name)}</h2>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           {type.warningThreshold !== undefined && !loading && (
-            <span className={`flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-semibold ${isWarning ? "bg-[#fdeceb] text-[#b42318]" : "bg-[#eaf7ec] text-[#1a7f37]"}`}>
-              <span className="material-symbols-outlined text-[13px]">{isWarning ? "warning" : "check_circle"}</span>
+            <Badge tone={isWarning ? "danger" : "success"}>
+              <span className="material-symbols-outlined mr-0.5 align-middle text-[13px]">{isWarning ? "warning" : "check_circle"}</span>
               {isWarning ? "Cảnh báo" : "Bình thường"}
-            </span>
+            </Badge>
           )}
-          <button type="button" onClick={onClose} aria-label="Đóng" className="text-[#68778a] transition-colors duration-150 hover:text-[#0878bd]"><span className="material-symbols-outlined text-[18px]">close</span></button>
+          <button type="button" onClick={onClose} aria-label="Đóng" className="text-ink-400 transition-colors duration-150 hover:text-accent"><span className="material-symbols-outlined text-[18px]">close</span></button>
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="space-y-2 border-b border-[#e5edf2] px-4 py-3 text-xs">
+        <div className="space-y-2 border-b border-line px-4 py-3 text-xs">
           <InfoRow label="Mã trạm" value={display(station.code ?? station.id)} />
           <InfoRow label="Phường, xã" value={display(station.area)} />
           <InfoRow label="Địa chỉ" value={display(station.address)} />
           <InfoRow label="Cập nhật cuối" value={loading ? "…" : formatDateTime(detail?.latest?.time_point)} />
         </div>
-        <div className="grid grid-cols-2 gap-px border-b border-[#e5edf2] bg-[#e8edf2]">
+        <div className="grid grid-cols-2 gap-px border-b border-line bg-line">
           <StatTile label={`${type.primaryLabel} hiện tại`} value={loading ? "…" : formatMeasure(detail?.latest?.[type.primaryField], type.primaryUnit)} />
           <StatTile label={type.accumulate ? `Trong ${MONITORING_TREND_HOURS} giờ` : `Cao nhất ${MONITORING_TREND_HOURS} giờ`} value={loading ? "…" : formatMeasure(detail?.aggregate, type.primaryUnit)} />
         </div>
         <div className="px-4 py-3">
-          <h3 className="mb-2 text-[10px] font-bold uppercase tracking-wide text-[#6b8092]">{type.primaryLabel} {MONITORING_TREND_HOURS} giờ qua</h3>
-          {loading ? <div className="h-40 animate-pulse rounded-md bg-[#f3f6f8]" />
+          <h3 className="mb-2 text-[10px] font-bold uppercase tracking-wide text-ink-500">{type.primaryLabel} {MONITORING_TREND_HOURS} giờ qua</h3>
+          {loading ? <div className="h-40 animate-pulse rounded-md bg-surface-muted" />
             : detail && detail.trend.length > 0 ? <HourlyBarChart data={detail.trend} color={type.color} unit={type.primaryUnit} />
-              : <p className="py-6 text-center text-xs text-[#95a6b2]">Chưa có dữ liệu.</p>}
+              : <p className="py-6 text-center text-xs text-ink-300">Chưa có dữ liệu.</p>}
         </div>
         <div className="px-4 pb-4">
-          <h3 className="mb-2 text-[10px] font-bold uppercase tracking-wide text-[#6b8092]">Số liệu gần nhất</h3>
-          {loading ? <div className="h-32 animate-pulse rounded-md bg-[#f3f6f8]" /> : (
+          <h3 className="mb-2 text-[10px] font-bold uppercase tracking-wide text-ink-500">Số liệu gần nhất</h3>
+          {loading ? <div className="h-32 animate-pulse rounded-md bg-surface-muted" /> : (
             <table className="w-full border-collapse text-left text-[11px]">
-              <thead className="text-[10px] font-bold uppercase text-[#8494a3]"><tr><th className="py-1.5">Thời gian</th><th className="py-1.5 text-right">{type.primaryLabel} ({type.primaryUnit})</th></tr></thead>
-              <tbody className="divide-y divide-[#eef2f6]">
+              <thead className="text-[10px] font-bold uppercase text-ink-400"><tr><th className="py-1.5">Thời gian</th><th className="py-1.5 text-right">{type.primaryLabel} ({type.primaryUnit})</th></tr></thead>
+              <tbody className="divide-y divide-line">
                 {(detail?.recent ?? []).map((reading, index) => (
-                  <tr key={index}><td className="py-1.5 text-[#526d82]">{formatDateTime(reading.time_point)}</td><td className="py-1.5 text-right font-semibold tabular-nums text-[#15324d]">{formatNumber(reading[type.primaryField])}</td></tr>
+                  <tr key={index}><td className="py-1.5 text-ink-500">{formatDateTime(reading.time_point)}</td><td className="py-1.5 text-right font-semibold tabular-nums text-ink-900">{formatNumber(reading[type.primaryField])}</td></tr>
                 ))}
-                {(!detail || detail.recent.length === 0) && <tr><td colSpan={2} className="py-4 text-center text-[#95a6b2]">Chưa có dữ liệu.</td></tr>}
+                {(!detail || detail.recent.length === 0) && <tr><td colSpan={2} className="py-4 text-center text-ink-300">Chưa có dữ liệu.</td></tr>}
               </tbody>
             </table>
           )}
         </div>
       </div>
-      <div className="shrink-0 border-t border-[#e5edf2] px-4 py-3">
-        <button type="button" onClick={onExport} disabled={!detail?.recent.length} className="flex h-9 w-full items-center justify-center gap-2 rounded-md bg-[#0878bd] text-xs font-bold text-white transition-colors duration-150 hover:bg-[#075f9e] disabled:opacity-50">
+      <div className="shrink-0 border-t border-line px-4 py-3">
+        <button type="button" onClick={onExport} disabled={!detail?.recent.length} className="flex h-9 w-full items-center justify-center gap-2 rounded-md bg-accent text-xs font-bold text-white transition-colors duration-150 hover:bg-accent-dark disabled:opacity-50">
           <span className="material-symbols-outlined text-[16px]">description</span>Xuất báo cáo
         </button>
       </div>
@@ -330,11 +384,11 @@ function StationDetailPanel({ station, type, detail, loading, isWarning, onClose
 }
 
 function InfoRow({ label, value }: { label: string; value: string }) {
-  return <div className="flex gap-2"><span className="w-24 shrink-0 text-[#8494a3]">{label}</span><span className="text-[#213e55]">{value}</span></div>;
+  return <div className="flex gap-2"><span className="w-24 shrink-0 text-ink-400">{label}</span><span className="text-ink-700">{value}</span></div>;
 }
 
 function StatTile({ label, value }: { label: string; value: string }) {
-  return <div className="bg-white px-3.5 py-3"><strong className="block text-lg leading-tight text-[#15324d]">{value}</strong><span className="mt-1 block text-[10px] leading-4 text-[#718596]">{label}</span></div>;
+  return <div className="bg-white px-3.5 py-3"><strong className="block text-lg leading-tight text-ink-900">{value}</strong><span className="mt-1 block text-[10px] leading-4 text-ink-400">{label}</span></div>;
 }
 
 function HourlyBarChart({ data, color, unit }: { data: HourlyAggregate[]; color: string; unit: string }) {
@@ -354,7 +408,7 @@ function HourlyBarChart({ data, color, unit }: { data: HourlyAggregate[]; color:
     <svg viewBox={`0 0 ${width} ${height}`} className="w-full" role="img" aria-label="Biểu đồ theo giờ">
       {[0, 0.5, 1].map((step) => {
         const y = paddingTop + innerHeight * (1 - step);
-        return <line key={step} x1={paddingLeft} x2={width - paddingRight} y1={y} y2={y} stroke="#e5edf2" strokeWidth={1} />;
+        return <line key={step} x1={paddingLeft} x2={width - paddingRight} y1={y} y2={y} stroke="var(--color-line)" strokeWidth={1} />;
       })}
       {data.map((item, index) => {
         const barHeight = (item.value / max) * innerHeight;
@@ -363,9 +417,9 @@ function HourlyBarChart({ data, color, unit }: { data: HourlyAggregate[]; color:
         return <rect key={item.hour} x={x + barWidth * 0.15} y={y} width={Math.max(barWidth * 0.7, 1)} height={Math.max(barHeight, 1)} rx={2} fill={color} />;
       })}
       {data.map((item, index) => index % labelEvery === 0 ? (
-        <text key={item.hour} x={paddingLeft + index * barWidth + barWidth / 2} y={height - 4} textAnchor="middle" fontSize={9} fill="#95a6b2">{item.hour.slice(11, 16)}</text>
+        <text key={item.hour} x={paddingLeft + index * barWidth + barWidth / 2} y={height - 4} textAnchor="middle" fontSize={9} fill="var(--color-ink-300)">{item.hour.slice(11, 16)}</text>
       ) : null)}
-      <text x={width - paddingRight} y={paddingTop + 8} textAnchor="end" fontSize={9} fill="#95a6b2">Đơn vị: {unit}</text>
+      <text x={width - paddingRight} y={paddingTop + 8} textAnchor="end" fontSize={9} fill="var(--color-ink-300)">Đơn vị: {unit}</text>
     </svg>
   );
 }

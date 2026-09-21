@@ -15,6 +15,30 @@
   --shadow-card: 0 1px 2px rgba(23, 60, 88, 0.04), 0 6px 16px rgba(23, 60, 88, 0.06);
   --shadow-card-hover: 0 2px 4px rgba(23, 60, 88, 0.05), 0 10px 24px rgba(23, 60, 88, 0.1);
   --shadow-dock: -6px 0 20px rgba(23, 60, 88, 0.08);
+
+  /* Bảng màu ngữ nghĩa dùng chung cho các trang data portal (thống kê, quan
+     trắc, tra cứu). Trước đây mỗi component tự chọn 1 mã hex "navy"/"gray"
+     riêng (chục biến thể gần giống nhau: #15324d, #17263c, #132e57, #213e55…)
+     khiến giao diện không đồng bộ; gom về 1 thang trung tính duy nhất + các
+     màu trạng thái cố định để toàn hệ thống dùng lại. */
+  --color-ink-900: #15324d;
+  --color-ink-700: #29475e;
+  --color-ink-500: #526d82;
+  --color-ink-400: #718596;
+  --color-ink-300: #95a6b2;
+  --color-line: #dce5eb;
+  --color-line-strong: #cbd8e8;
+  --color-surface: #f5f7fa;
+  --color-surface-muted: #fbfcfd;
+  --color-accent: #0878bd;
+  --color-accent-dark: #075f9e;
+  --color-accent-soft: #edf6fc;
+  --color-success: #1a7f37;
+  --color-success-soft: #eaf7ec;
+  --color-warning: #a15c00;
+  --color-warning-soft: #fff3dc;
+  --color-danger: #b42318;
+  --color-danger-soft: #fdeceb;
 }
 
 .material-symbols-outlined {

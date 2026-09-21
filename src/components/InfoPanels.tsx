@@ -37,41 +37,41 @@ export function DataOverviewPanel({
     : null;
 
   return (
-    <section className="absolute right-4 top-4 z-10 flex max-h-[calc(100%-2rem)] w-[min(21rem,calc(100%-2rem))] flex-col overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/95 shadow-panel backdrop-blur-sm">
+    <section className="absolute right-4 top-4 z-10 flex max-h-[calc(100%-2rem)] w-[min(21rem,calc(100%-2rem))] flex-col overflow-hidden rounded-xl border border-line-strong bg-white/95 shadow-panel backdrop-blur-sm">
       <header className="flex shrink-0 items-center justify-between gap-2 border-b border-[#d5deea] bg-[#f8fafc] px-4 py-3">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[19px] text-[#0878bd]">analytics</span>
+          <span className="material-symbols-outlined text-[19px] text-accent">analytics</span>
           <h2 className="text-sm font-bold text-[#17263c]">{t("overview.title")}</h2>
         </div>
-        <button type="button" onClick={onClose} title={t("common.close")} className="text-[#68778a] transition-colors duration-150 hover:text-[#0878bd]">
+        <button type="button" onClick={onClose} title={t("common.close")} className="text-ink-400 transition-colors duration-150 hover:text-accent">
           <span className="material-symbols-outlined text-[18px]">close</span>
         </button>
       </header>
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="grid grid-cols-2 gap-px bg-[#e8edf2]">
+        <div className="grid grid-cols-2 gap-px bg-line">
           <OverviewMetric icon="dataset" label={t("overview.totalObjects")} value={totalObjects} loading={loading} />
           <OverviewMetric icon="verified" label={t("overview.readableCollections")} value={`${readableCollections}/${totalCollections}`} loading={loading} />
         </div>
-        <div className="border-t border-[#e8edf2] px-3.5 py-2.5">
-          <h3 className="mb-2 text-[10px] font-bold uppercase tracking-wide text-[#6b8092]">{t("overview.detailTitle")}</h3>
+        <div className="border-t border-line px-3.5 py-2.5">
+          <h3 className="mb-2 text-[10px] font-bold uppercase tracking-wide text-ink-500">{t("overview.detailTitle")}</h3>
           <div className="space-y-1.5">
           {groups.map((stat) => (
             <div key={stat.label} className="bg-white px-3.5 py-3">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[17px] text-[#6a879b]">{stat.icon}</span>
-                <span className="flex-1 text-xs text-[#31546e]">{stat.label}</span>
-                <strong className="text-sm text-[#15324d]">{formatCount(stat.value, loading)}</strong>
+                <span className="material-symbols-outlined text-[17px] text-ink-500">{stat.icon}</span>
+                <span className="flex-1 text-xs text-ink-700">{stat.label}</span>
+                <strong className="text-sm text-ink-900">{formatCount(stat.value, loading)}</strong>
               </div>
             </div>
           ))}
           </div>
         </div>
-        <p className="border-t border-[#e8edf2] px-4 py-2 text-[10px] leading-4 text-[#718596]">
+        <p className="border-t border-line px-4 py-2 text-[10px] leading-4 text-ink-400">
           {t("overview.note")}
         </p>
       </div>
-      <div className="shrink-0 border-t border-[#e8edf2] px-4 py-3">
-        <a href="/statics" className="flex h-9 items-center justify-center gap-2 rounded-md bg-[#0878bd] text-xs font-bold text-white transition-colors duration-150 hover:bg-[#075f9e]">
+      <div className="shrink-0 border-t border-line px-4 py-3">
+        <a href="/statics" className="flex h-9 items-center justify-center gap-2 rounded-md bg-accent text-xs font-bold text-white transition-colors duration-150 hover:bg-accent-dark">
           <span className="material-symbols-outlined text-[17px]">open_in_new</span>
           {t("overview.viewDetails")}
         </a>
@@ -81,7 +81,7 @@ export function DataOverviewPanel({
 }
 
 function OverviewMetric({ icon, label, value, loading }: { icon: string; label: string; value: number | string | null; loading: boolean }) {
-  return <div className="bg-white px-3.5 py-3"><span className="material-symbols-outlined text-[18px] text-[#6a879b]">{icon}</span><strong className="mt-1 block text-xl leading-none text-[#15324d]">{typeof value === "string" ? value : formatCount(value, loading)}</strong><span className="mt-1 block text-[10px] leading-4 text-[#718596]">{label}</span></div>;
+  return <div className="bg-white px-3.5 py-3"><span className="material-symbols-outlined text-[18px] text-ink-500">{icon}</span><strong className="mt-1 block text-xl leading-none text-ink-900">{typeof value === "string" ? value : formatCount(value, loading)}</strong><span className="mt-1 block text-[10px] leading-4 text-ink-400">{label}</span></div>;
 }
 
 function formatCount(value: number | null, loading: boolean): string {
@@ -98,7 +98,7 @@ function sumCounts(counts: Record<string, number | null>, collections: string[])
 export function CityInfoPanel({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
   return (
-    <section className="absolute right-4 top-4 z-10 w-[25rem] max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/95 shadow-panel backdrop-blur-sm">
+    <section className="absolute right-4 top-4 z-10 w-[25rem] max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-line-strong bg-white/95 shadow-panel backdrop-blur-sm">
       <header className="flex items-center justify-between gap-2 border-b border-[#d5deea] bg-[#f8fafc] px-4 py-3">
         <h2 className="font-serif text-base font-bold text-[#17263c]">
           {t("city.title")}
@@ -108,7 +108,7 @@ export function CityInfoPanel({ onClose }: { onClose: () => void }) {
       <div className="space-y-4 px-4 py-3 text-sm leading-relaxed text-[#17263c]">
         <Item icon="account_balance" label={t("city.administrativeUnits")}>
           {t("city.administrativeValue")}
-          <p className="mt-1 text-xs italic text-[#68778a]">
+          <p className="mt-1 text-xs italic text-ink-400">
             {t("city.resolution")}
           </p>
         </Item>
@@ -138,7 +138,7 @@ export function WardInfoPanel({
   const note = getLocalizedDataValue(ward.properties, ["GhiChu"], language);
   const usesFallback = [name, geographicPosition, committeeAddress, note].some((item) => item.value && item.isFallback);
   return (
-    <section className="absolute bottom-4 right-4 z-10 max-h-[calc(100%-2rem)] w-96 max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-[#cbd8e8] bg-white/95 shadow-panel backdrop-blur-sm">
+    <section className="absolute bottom-4 right-4 z-10 max-h-[calc(100%-2rem)] w-96 max-w-[calc(100%-2rem)] overflow-hidden rounded-xl border border-line-strong bg-white/95 shadow-panel backdrop-blur-sm">
       <header className="flex items-start justify-between gap-2 border-b border-[#d5deea] bg-[#f8fafc] px-4 py-3">
         <h2 className="font-serif text-base font-bold text-[#17263c]">
           {name.value || ward.label || ward.name}
@@ -345,7 +345,7 @@ function Item({
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex gap-2">
-      <span className="w-20 shrink-0 text-[#526174]">{label}:</span>
+      <span className="w-20 shrink-0 text-ink-500">{label}:</span>
       <span>{value}</span>
     </div>
   );

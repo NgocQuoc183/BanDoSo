@@ -52,13 +52,13 @@ export function AppHeader({
     else await document.documentElement.requestFullscreen();
   };
   return (
-    <header className="relative z-50 flex h-[4.5rem] shrink-0 items-center gap-3 border-b border-[#d9e4ee] bg-white/95 px-3 shadow-header backdrop-blur-sm sm:px-5">
+    <header className="relative z-50 flex h-[4.5rem] shrink-0 items-center gap-3 border-b border-line bg-white/95 px-3 shadow-header backdrop-blur-sm sm:px-5">
       <button
         type="button"
         aria-label={t("header.toggleMenu")}
         title={t("header.toggleMenu")}
         onClick={onMenuToggle}
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-[#075f9e] transition-colors duration-150 hover:bg-[#edf6fc] active:bg-[#dcf0fc]"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-accent-dark transition-colors duration-150 hover:bg-accent-soft active:bg-[#dcf0fc]"
       >
         <span className="material-symbols-outlined">menu</span>
       </button>
@@ -71,10 +71,10 @@ export function AppHeader({
           />
         </div>
         <div className="hidden min-w-0 sm:block">
-          <h1 className="truncate text-base font-extrabold uppercase tracking-[-0.025em] text-[#075b9b] lg:text-xl">
+          <h1 className="truncate text-base font-extrabold uppercase tracking-[-0.025em] text-accent-dark lg:text-xl">
             {t("header.title")}
           </h1>
-          <p className="mt-0.5 hidden text-[10px] font-medium tracking-[0.035em] text-[#60798d] md:block">
+          <p className="mt-0.5 hidden text-[10px] font-medium tracking-[0.035em] text-ink-500 md:block">
             {t("header.slogan")}
           </p>
         </div>
@@ -87,8 +87,8 @@ export function AppHeader({
             setSearchOpen(false);
         }}
       >
-        <label className="flex h-10 items-center gap-2 rounded-lg border border-[#d7e1ea] bg-[#f8fafc] px-3 transition-all duration-150 focus-within:border-[#0782c8] focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(7,130,200,0.1)]">
-          <span className="material-symbols-outlined text-[20px] text-[#648096]">
+        <label className="flex h-10 items-center gap-2 rounded-lg border border-line bg-surface-muted px-3 transition-all duration-150 focus-within:border-accent focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(7,130,200,0.1)]">
+          <span className="material-symbols-outlined text-[20px] text-ink-400">
             search
           </span>
           <input
@@ -98,27 +98,27 @@ export function AppHeader({
               setSearchOpen(true);
             }}
             placeholder={t("header.searchPlaceholder")}
-            className="min-w-0 flex-1 bg-transparent text-xs text-[#17344d] outline-none placeholder:text-[#8295a5] sm:text-sm"
+            className="min-w-0 flex-1 bg-transparent text-xs text-ink-900 outline-none placeholder:text-ink-300 sm:text-sm"
           />
           {search && (
             <button
               type="button"
               aria-label={t("header.clearSearch")}
               onClick={() => onSearchChange("")}
-              className="text-[#7890a3] transition-colors duration-150 hover:text-[#0878bd]"
+              className="text-ink-400 transition-colors duration-150 hover:text-accent"
             >
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
           )}
         </label>
         {searchOpen && search.trim() && (
-          <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-50 max-h-[min(28rem,70dvh)] overflow-y-auto rounded-xl border border-[#d5e1eb] bg-white shadow-panel">
-            <div className="flex items-center justify-between border-b border-[#e4ebf1] px-3 py-2 text-[10px] text-[#718596]">
+          <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-50 max-h-[min(28rem,70dvh)] overflow-y-auto rounded-xl border border-line bg-white shadow-panel">
+            <div className="flex items-center justify-between border-b border-line px-3 py-2 text-[10px] text-ink-400">
               <span>{t("header.searchResults")}</span>
               <span>{t("header.resultCount", { count: totalSearchResults })}</span>
             </div>
             {searchResults.length ? (
-              <div className="divide-y divide-[#edf1f5]">
+              <div className="divide-y divide-line">
                 {searchResults.map((result) => (
                   <button
                     type="button"
@@ -127,38 +127,38 @@ export function AppHeader({
                       onSearchResultSelect(result);
                       setSearchOpen(false);
                     }}
-                    className="flex w-full gap-2.5 px-3 py-2.5 text-left hover:bg-[#f0f7fc]"
+                    className="flex w-full gap-2.5 px-3 py-2.5 text-left hover:bg-accent-soft"
                   >
                     <span
                       className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full"
                       style={{ backgroundColor: result.color }}
                     />
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[10px] font-semibold uppercase tracking-wide text-[#708596]">
+                      <span className="block text-[10px] font-semibold uppercase tracking-wide text-ink-500">
                         {result.layer}
                       </span>
-                      <span className="mt-0.5 block text-xs font-semibold leading-4 text-[#17344d]">
+                      <span className="mt-0.5 block text-xs font-semibold leading-4 text-ink-900">
                         {result.title}
                       </span>
                       {result.detail && (
-                        <span className="mt-0.5 block truncate text-[10px] text-[#718596]">
+                        <span className="mt-0.5 block truncate text-[10px] text-ink-400">
                           {result.detail}
                         </span>
                       )}
                     </span>
-                    <span className="material-symbols-outlined self-center text-[17px] text-[#8aa0b1]">
+                    <span className="material-symbols-outlined self-center text-[17px] text-ink-300">
                       chevron_right
                     </span>
                   </button>
                 ))}
               </div>
             ) : (
-              <div className="px-4 py-6 text-center text-xs text-[#718596]">
+              <div className="px-4 py-6 text-center text-xs text-ink-400">
                 {t("header.noResults")}
               </div>
             )}
             {totalSearchResults > searchResults.length && (
-              <div className="border-t border-[#e4ebf1] px-3 py-2 text-center text-[10px] text-[#718596]">
+              <div className="border-t border-line px-3 py-2 text-center text-[10px] text-ink-400">
                 {t("header.showingFirst", { count: searchResults.length })}
               </div>
             )}
@@ -198,7 +198,7 @@ function LanguageSwitcher({
 }) {
   const { t } = useTranslation();
   return (
-    <label className="relative flex h-10 shrink-0 items-center rounded-lg border border-[#d7e1ea] bg-white pl-2 text-[#31546e] transition-colors duration-150 hover:border-[#8bbbd8]">
+    <label className="relative flex h-10 shrink-0 items-center rounded-lg border border-line bg-white pl-2 text-ink-700 transition-colors duration-150 hover:border-line-strong">
       <span className="material-symbols-outlined text-[18px]">language</span>
       <span className="sr-only">{t("language.label")}</span>
       <select
@@ -228,7 +228,7 @@ function HeaderAction({
     <button
       type="button"
       onClick={onClick}
-      className="flex h-10 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-[#31546e] transition-colors duration-150 hover:bg-[#edf6fc] hover:text-[#0769aa] active:bg-[#dcf0fc]"
+      className="flex h-10 items-center gap-1.5 rounded-lg px-3 text-xs font-semibold text-ink-700 transition-colors duration-150 hover:bg-accent-soft hover:text-accent-dark active:bg-[#dcf0fc]"
     >
       <span className="material-symbols-outlined text-[19px]">{icon}</span>
       {label}
@@ -239,7 +239,7 @@ function HeaderAction({
 export function AppFooter() {
   const { t } = useTranslation();
   return (
-    <footer className="relative z-40 hidden min-h-[4.75rem] shrink-0 items-center gap-5 bg-gradient-to-r from-[#063f70] via-[#07518e] to-[#0878bd] px-6 py-3 text-white shadow-[0_-1px_0_rgba(255,255,255,0.08)] md:flex">
+    <footer className="relative z-40 hidden min-h-[4.75rem] shrink-0 items-center gap-5 bg-accent-dark px-6 py-3 text-white shadow-[0_-1px_0_rgba(255,255,255,0.08)] md:flex">
       <div className="flex min-w-0 items-center gap-3">
         <img
           src="/images/logo/Logo_IOC.png"
