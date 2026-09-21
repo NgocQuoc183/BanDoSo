@@ -107,7 +107,7 @@ export function MonitoringDashboard() {
         const el = document.createElement("button");
         el.type = "button";
         el.className = "flex h-7 w-7 items-center justify-center";
-        el.innerHTML = `<span class="flex h-full w-full items-center justify-center rounded-full border-2 border-white shadow-[0_2px_6px_rgba(15,40,70,0.35)] transition-transform hover:scale-110" style="background-color:${activeTypeRef.current.color}"><span class="material-symbols-outlined text-white" style="font-size:15px">${activeTypeRef.current.icon}</span></span>`;
+        el.innerHTML = `<span class="flex h-full w-full items-center justify-center rounded-full border-2 border-white shadow-[0_1px_4px_rgba(15,40,70,0.28)] transition-transform hover:scale-110" style="background-color:${activeTypeRef.current.color}"><span class="material-symbols-outlined text-white" style="font-size:15px">${activeTypeRef.current.icon}</span></span>`;
         el.addEventListener("click", (event) => { event.stopPropagation(); setSelectedId(id); });
         const marker = new maplibregl.Marker({ element: el, anchor: "center" }).setLngLat(coords).addTo(map);
         markersRef.current.set(id, marker);
@@ -123,10 +123,12 @@ export function MonitoringDashboard() {
   useEffect(() => {
     markersRef.current.forEach((marker, id) => {
       const el = marker.getElement();
-      el.style.outline = id === selectedId ? "3px solid #d71920" : "none";
-      el.style.outlineOffset = id === selectedId ? "2px" : "0";
+      const active = id === selectedId;
+      el.style.outline = active ? "3px solid var(--color-accent)" : "none";
+      el.style.outlineOffset = active ? "2px" : "0";
+      el.style.boxShadow = active ? "0 0 0 6px rgba(8,120,189,0.16)" : "none";
       el.style.borderRadius = "9999px";
-      el.style.zIndex = id === selectedId ? "10" : "1";
+      el.style.zIndex = active ? "10" : "1";
     });
     const map = mapRef.current;
     const coords = selectedId ? stationCoordinates(stations.find((s) => String(s.id) === selectedId) ?? {}) : null;
@@ -208,17 +210,30 @@ export function MonitoringDashboard() {
       </button>
     </div>
     <div className="flex min-h-0 flex-1">
-      <aside className="hidden w-[14.5rem] shrink-0 overflow-y-auto border-r border-line bg-white lg:block">
-        <div className="px-5 py-5 text-[11px] font-bold uppercase tracking-wide text-ink-500">Trạm quan trắc IoT</div>
-        {MONITORING_STATION_TYPES.map((type, index) => (
-          <button key={type.key} type="button" onClick={() => setTypeIndex(index)} className="w-full text-left">
-            <div className={`flex items-center gap-3 border-l-2 px-4 py-3 text-xs font-semibold transition-colors duration-150 ${index === typeIndex ? "border-accent bg-accent-soft text-accent-dark" : "border-transparent text-ink-500 hover:bg-surface-muted"}`}>
-              <span className="material-symbols-outlined text-[19px]" style={{ color: type.color }}>{type.icon}</span>
-              {type.label}
-            </div>
-          </button>
-        ))}
-        <div className="border-t border-line px-5 py-4 text-xs text-ink-400"><span className="material-symbols-outlined mr-2 align-middle text-[16px]">arrow_back</span><a href="/">Về bản đồ</a></div>
+      <aside className="hidden w-56 shrink-0 flex-col border-r border-line bg-white lg:flex">
+        <div className="flex items-center gap-2.5 border-b border-line px-4 py-4">
+          <span className="material-symbols-outlined text-[20px] text-accent">sensors</span>
+          <div className="min-w-0">
+            <p className="truncate text-[12.5px] font-extrabold uppercase tracking-wide text-ink-900">Trạm quan trắc IoT</p>
+            <p className="text-[10px] text-ink-400">Giám sát thời gian thực</p>
+          </div>
+        </div>
+        <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 py-2.5">
+          {MONITORING_STATION_TYPES.map((type, index) => (
+            <button key={type.key} type="button" onClick={() => setTypeIndex(index)} className="w-full text-left">
+              <div className={`relative flex items-center gap-3 rounded-md px-3 py-2.5 text-[13px] font-semibold transition-colors duration-150 ${index === typeIndex ? "bg-accent-soft text-accent-dark" : "text-ink-500 hover:bg-surface-muted hover:text-ink-700"}`}>
+                {index === typeIndex && <span className="absolute inset-y-1.5 left-0 w-[3px] rounded-full bg-accent" />}
+                <span className="material-symbols-outlined text-[19px]" style={{ color: index === typeIndex ? "var(--color-accent)" : type.color }}>{type.icon}</span>
+                {type.label}
+              </div>
+            </button>
+          ))}
+        </nav>
+        <div className="border-t border-line px-2 py-2.5">
+          <a href="/" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-[13px] font-semibold text-ink-500 transition-colors duration-150 hover:bg-surface-muted hover:text-ink-700">
+            <span className="material-symbols-outlined text-[19px]">arrow_back</span>Về bản đồ
+          </a>
+        </div>
       </aside>
       {!stationsLoading && (
         <StationListPanel
@@ -281,31 +296,34 @@ function StationListPanel({ stations, total, selectedId, onSelect, type, search,
     ? "fixed inset-y-[4.25rem] inset-x-0 z-30 flex flex-col bg-white lg:hidden"
     // Cột layout thật (không phải overlay đè lên bản đồ) — trước đây panel này
     // "absolute" nằm trên bản đồ nên marker rơi vào vùng nó che bị chặn click.
-    : "hidden w-[16rem] shrink-0 flex-col border-r border-line bg-white lg:flex";
+    : "hidden w-64 shrink-0 flex-col border-r border-line bg-white lg:flex";
   return (
     <div className={wrapperClass}>
       {variant === "sheet" && (
-        <div className="flex shrink-0 items-center justify-between border-b border-line px-3.5 py-2.5">
+        <div className="flex shrink-0 items-center justify-between border-b border-line px-4 py-3">
           <span className="text-xs font-bold text-ink-900">Chọn {type.label.toLocaleLowerCase("vi")}</span>
           <button type="button" onClick={onClose} aria-label="Đóng" className="text-ink-400 transition-colors duration-150 hover:text-accent">
             <span className="material-symbols-outlined text-[18px]">close</span>
           </button>
         </div>
       )}
-      <div className="shrink-0 border-b border-line px-3.5 py-2.5">
+      <div className="shrink-0 border-b border-line px-3.5 py-3">
         <label className="flex h-9 items-center gap-2 rounded-md border border-line bg-surface-muted px-2.5 transition-colors duration-150 focus-within:border-accent focus-within:bg-white">
           <span className="material-symbols-outlined text-[16px] text-ink-400">search</span>
           <input value={search} onChange={(event) => onSearchChange(event.target.value)} placeholder={`Tìm ${type.label.toLocaleLowerCase("vi")}...`} className="min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-ink-300" />
         </label>
-        <p className="mt-2 text-[11px] font-semibold text-ink-500">{stations.length}/{total} {type.label.toLocaleLowerCase("vi")}</p>
+        <p className="mt-2.5 text-[11px] font-bold uppercase tracking-wide text-ink-400"><span className="text-ink-900">{stations.length}/{total}</span> {type.label.toLocaleLowerCase("vi")}</p>
       </div>
-      <div className="flex-1 overflow-y-auto">
-        {stations.map((station) => (
-          <button key={String(station.id)} type="button" onClick={() => onSelect(String(station.id))} className={`block w-full border-b border-line px-3.5 py-2.5 text-left text-xs transition-colors duration-150 ${selectedId === String(station.id) ? "bg-accent-soft shadow-[inset_3px_0_0_var(--color-accent)]" : "hover:bg-surface-muted"}`}>
-            <div className="font-semibold text-ink-700">{display(station.name)}</div>
-            <div className="mt-0.5 text-[10px] text-ink-400">{display(station.code)} · {display(station.area)}</div>
-          </button>
-        ))}
+      <div className="flex-1 overflow-y-auto px-2 py-2">
+        {stations.map((station) => {
+          const active = selectedId === String(station.id);
+          return (
+            <button key={String(station.id)} type="button" onClick={() => onSelect(String(station.id))} className={`mb-1 block w-full rounded-md px-3 py-2.5 text-left text-xs transition-colors duration-150 ${active ? "bg-accent-soft" : "hover:bg-surface-muted"}`}>
+              <div className={`truncate font-semibold ${active ? "text-accent-dark" : "text-ink-700"}`}>{display(station.name)}</div>
+              <div className="mt-0.5 truncate text-[10.5px] text-ink-400">{display(station.code)} · {display(station.area)}</div>
+            </button>
+          );
+        })}
         {stations.length === 0 && <p className="px-3.5 py-4 text-xs text-ink-300">Không tìm thấy trạm phù hợp.</p>}
       </div>
     </div>
@@ -322,15 +340,15 @@ function StationDetailPanel({ station, type, detail, loading, isWarning, onClose
   onExport: () => void;
 }) {
   return (
-    // Overlay toàn màn hình dưới lg (sidebar loại trạm + danh sách đã ẩn ở cỡ
-    // này) để tránh việc panel "w-full" làm vỡ layout khi vẫn nằm chung hàng
-    // flex với bản đồ trên màn hình hẹp; từ lg trở lên quay lại làm cột cạnh
-    // bản đồ như cũ.
-    <aside className="fixed inset-y-[4.25rem] inset-x-0 z-30 flex flex-col overflow-hidden bg-white shadow-dock lg:static lg:inset-auto lg:z-auto lg:w-full lg:max-w-[24rem] lg:shrink-0 lg:border-l lg:border-line">
+    // Dưới lg: bottom sheet gọn (chiều cao giới hạn, neo đáy màn hình) để bản
+    // đồ vẫn lộ phần trên thay vì bị panel che kín; từ lg trở lên quay lại làm
+    // cột cạnh bản đồ như cũ.
+    <aside className="fixed inset-x-0 bottom-0 z-30 flex max-h-[78dvh] flex-col overflow-hidden rounded-t-xl bg-white shadow-dock lg:static lg:inset-auto lg:z-auto lg:w-full lg:max-w-[24rem] lg:max-h-none lg:shrink-0 lg:rounded-none lg:border-l lg:border-line">
+      <div className="flex justify-center pb-1 pt-2 lg:hidden"><span className="h-1 w-10 rounded-full bg-line-strong" /></div>
       <div className="flex items-start justify-between gap-3 border-b border-line px-4 py-4">
         <div className="min-w-0">
-          <p className="text-[10px] font-bold uppercase tracking-wide" style={{ color: type.color }}>{type.label}</p>
-          <h2 className="mt-1 truncate text-sm font-extrabold text-ink-900">{display(station.name)}</h2>
+          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.08em]" style={{ color: type.color, backgroundColor: `${type.color}17` }}>{type.label}</span>
+          <h2 className="mt-1.5 truncate text-base font-extrabold text-ink-900">{display(station.name)}</h2>
         </div>
         <div className="flex shrink-0 items-center gap-2">
           {type.warningThreshold !== undefined && !loading && (
@@ -343,34 +361,45 @@ function StationDetailPanel({ station, type, detail, loading, isWarning, onClose
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="space-y-2 border-b border-line px-4 py-3 text-xs">
+        <div className="space-y-2.5 border-b border-line px-4 py-3.5 text-xs">
           <InfoRow label="Mã trạm" value={display(station.code ?? station.id)} />
           <InfoRow label="Phường, xã" value={display(station.area)} />
           <InfoRow label="Địa chỉ" value={display(station.address)} />
           <InfoRow label="Cập nhật cuối" value={loading ? "…" : formatDateTime(detail?.latest?.time_point)} />
         </div>
-        <div className="grid grid-cols-2 gap-px border-b border-line bg-line">
+        <div className="grid grid-cols-2 gap-px border-y border-line bg-line">
           <StatTile label={`${type.primaryLabel} hiện tại`} value={loading ? "…" : formatMeasure(detail?.latest?.[type.primaryField], type.primaryUnit)} />
           <StatTile label={type.accumulate ? `Trong ${MONITORING_TREND_HOURS} giờ` : `Cao nhất ${MONITORING_TREND_HOURS} giờ`} value={loading ? "…" : formatMeasure(detail?.aggregate, type.primaryUnit)} />
         </div>
-        <div className="px-4 py-3">
-          <h3 className="mb-2 text-[10px] font-bold uppercase tracking-wide text-ink-500">{type.primaryLabel} {MONITORING_TREND_HOURS} giờ qua</h3>
-          {loading ? <div className="h-40 animate-pulse rounded-md bg-surface-muted" />
+        <div className="border-b border-line px-4 py-3.5">
+          <div className="mb-3 flex items-baseline justify-between gap-2">
+            <h3 className="text-[11px] font-bold uppercase tracking-wide text-ink-500">{type.primaryLabel} {MONITORING_TREND_HOURS} giờ qua</h3>
+            <span className="shrink-0 text-[10px] font-medium text-ink-400">Đơn vị: {type.primaryUnit}</span>
+          </div>
+          {loading ? <div className="h-48 animate-pulse rounded-md bg-surface-muted" />
             : detail && detail.trend.length > 0 ? <HourlyBarChart data={detail.trend} color={type.color} unit={type.primaryUnit} />
-              : <p className="py-6 text-center text-xs text-ink-300">Chưa có dữ liệu.</p>}
+              : <p className="py-8 text-center text-xs text-ink-300">Chưa có dữ liệu.</p>}
         </div>
-        <div className="px-4 pb-4">
-          <h3 className="mb-2 text-[10px] font-bold uppercase tracking-wide text-ink-500">Số liệu gần nhất</h3>
+        <div className="px-4 py-3.5">
+          <h3 className="mb-2 text-[11px] font-bold uppercase tracking-wide text-ink-500">Số liệu gần nhất</h3>
           {loading ? <div className="h-32 animate-pulse rounded-md bg-surface-muted" /> : (
-            <table className="w-full border-collapse text-left text-[11px]">
-              <thead className="text-[10px] font-bold uppercase text-ink-400"><tr><th className="py-1.5">Thời gian</th><th className="py-1.5 text-right">{type.primaryLabel} ({type.primaryUnit})</th></tr></thead>
-              <tbody className="divide-y divide-line">
-                {(detail?.recent ?? []).map((reading, index) => (
-                  <tr key={index}><td className="py-1.5 text-ink-500">{formatDateTime(reading.time_point)}</td><td className="py-1.5 text-right font-semibold tabular-nums text-ink-900">{formatNumber(reading[type.primaryField])}</td></tr>
-                ))}
-                {(!detail || detail.recent.length === 0) && <tr><td colSpan={2} className="py-4 text-center text-ink-300">Chưa có dữ liệu.</td></tr>}
-              </tbody>
-            </table>
+            <div className="overflow-hidden rounded-md border border-line">
+              <table className="w-full border-collapse text-left text-[11px]">
+                <thead className="bg-surface-muted text-[10px] font-bold uppercase tracking-wide text-ink-500"><tr><th className="px-2.5 py-2">Thời gian</th><th className="px-2.5 py-2 text-right">{type.primaryLabel} ({type.primaryUnit})</th></tr></thead>
+                <tbody className="divide-y divide-line">
+                  {(detail?.recent ?? []).map((reading, index) => (
+                    <tr key={index} className={index === 0 ? "bg-accent-soft" : undefined}>
+                      <td className="px-2.5 py-2 text-ink-500">
+                        {formatDateTime(reading.time_point)}
+                        {index === 0 && <span className="ml-1.5 text-[9px] font-bold uppercase tracking-wide text-accent-dark">Mới nhất</span>}
+                      </td>
+                      <td className="px-2.5 py-2 text-right font-semibold tabular-nums text-ink-900">{formatNumber(reading[type.primaryField])}</td>
+                    </tr>
+                  ))}
+                  {(!detail || detail.recent.length === 0) && <tr><td colSpan={2} className="px-2.5 py-4 text-center text-ink-300">Chưa có dữ liệu.</td></tr>}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>
@@ -384,43 +413,77 @@ function StationDetailPanel({ station, type, detail, loading, isWarning, onClose
 }
 
 function InfoRow({ label, value }: { label: string; value: string }) {
-  return <div className="flex gap-2"><span className="w-24 shrink-0 text-ink-400">{label}</span><span className="text-ink-700">{value}</span></div>;
+  return <div className="flex gap-2"><span className="w-28 shrink-0 text-ink-400">{label}</span><span className="text-ink-700">{value}</span></div>;
 }
 
 function StatTile({ label, value }: { label: string; value: string }) {
-  return <div className="bg-white px-3.5 py-3"><strong className="block text-lg leading-tight text-ink-900">{value}</strong><span className="mt-1 block text-[10px] leading-4 text-ink-400">{label}</span></div>;
+  return (
+    <div className="bg-white px-4 py-4">
+      <span className="block text-[10px] font-bold uppercase tracking-wide text-ink-400">{label}</span>
+      <strong className="mt-1.5 block text-2xl font-extrabold leading-tight tabular-nums text-ink-900">{value}</strong>
+    </div>
+  );
 }
 
 function HourlyBarChart({ data, color, unit }: { data: HourlyAggregate[]; color: string; unit: string }) {
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const width = 380;
-  const height = 150;
-  const paddingLeft = 4;
-  const paddingRight = 4;
-  const paddingTop = 8;
-  const paddingBottom = 20;
+  const height = 190;
+  const paddingLeft = 30;
+  const paddingRight = 8;
+  const paddingTop = 10;
+  const paddingBottom = 22;
   const innerWidth = width - paddingLeft - paddingRight;
   const innerHeight = height - paddingTop - paddingBottom;
   const max = Math.max(...data.map((item) => item.value), 1);
   const barWidth = innerWidth / data.length;
   const labelEvery = Math.max(1, Math.round(data.length / 6));
 
+  const tooltip = hoverIndex !== null ? (() => {
+    const item = data[hoverIndex];
+    const x = paddingLeft + hoverIndex * barWidth + barWidth / 2;
+    const y = paddingTop + innerHeight * (1 - item.value / max);
+    return { item, leftPct: (x / width) * 100, topPct: (y / height) * 100 };
+  })() : null;
+
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="w-full" role="img" aria-label="Biểu đồ theo giờ">
-      {[0, 0.5, 1].map((step) => {
-        const y = paddingTop + innerHeight * (1 - step);
-        return <line key={step} x1={paddingLeft} x2={width - paddingRight} y1={y} y2={y} stroke="var(--color-line)" strokeWidth={1} />;
-      })}
-      {data.map((item, index) => {
-        const barHeight = (item.value / max) * innerHeight;
-        const x = paddingLeft + index * barWidth;
-        const y = paddingTop + innerHeight - barHeight;
-        return <rect key={item.hour} x={x + barWidth * 0.15} y={y} width={Math.max(barWidth * 0.7, 1)} height={Math.max(barHeight, 1)} rx={2} fill={color} />;
-      })}
-      {data.map((item, index) => index % labelEvery === 0 ? (
-        <text key={item.hour} x={paddingLeft + index * barWidth + barWidth / 2} y={height - 4} textAnchor="middle" fontSize={9} fill="var(--color-ink-300)">{item.hour.slice(11, 16)}</text>
-      ) : null)}
-      <text x={width - paddingRight} y={paddingTop + 8} textAnchor="end" fontSize={9} fill="var(--color-ink-300)">Đơn vị: {unit}</text>
-    </svg>
+    <div className="relative">
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" role="img" aria-label="Biểu đồ theo giờ">
+        {[0, 0.5, 1].map((step) => {
+          const y = paddingTop + innerHeight * (1 - step);
+          return (
+            <g key={step}>
+              <line x1={paddingLeft} x2={width - paddingRight} y1={y} y2={y} stroke="var(--color-line)" strokeWidth={1} />
+              <text x={paddingLeft - 6} y={y + 3} textAnchor="end" fontSize={9} fill="var(--color-ink-300)">{Math.round(max * step).toLocaleString("vi")}</text>
+            </g>
+          );
+        })}
+        {data.map((item, index) => {
+          const barHeight = (item.value / max) * innerHeight;
+          const x = paddingLeft + index * barWidth;
+          const y = paddingTop + innerHeight - barHeight;
+          const active = hoverIndex === index;
+          return (
+            <g key={item.hour}>
+              <rect x={x} y={paddingTop} width={barWidth} height={innerHeight} fill="transparent" onMouseEnter={() => setHoverIndex(index)} onMouseLeave={() => setHoverIndex((current) => (current === index ? null : current))} />
+              <rect x={x + barWidth * 0.15} y={y} width={Math.max(barWidth * 0.7, 1)} height={Math.max(barHeight, 1)} rx={2} fill={color} opacity={active ? 1 : 0.85} />
+            </g>
+          );
+        })}
+        {data.map((item, index) => index % labelEvery === 0 ? (
+          <text key={item.hour} x={paddingLeft + index * barWidth + barWidth / 2} y={height - 5} textAnchor="middle" fontSize={9.5} fill="var(--color-ink-400)">{item.hour.slice(11, 16)}</text>
+        ) : null)}
+      </svg>
+      {tooltip && (
+        <div
+          className="pointer-events-none absolute z-10 whitespace-nowrap rounded-md border border-line bg-white px-2.5 py-1.5 text-[11px] shadow-card"
+          style={{ left: `${tooltip.leftPct}%`, top: `${tooltip.topPct}%`, transform: "translate(-50%, calc(-100% - 8px))" }}
+        >
+          <div className="font-semibold text-ink-900">{tooltip.item.value.toLocaleString("vi")} {unit}</div>
+          <div className="text-ink-400">{tooltip.item.hour.slice(11, 16)}</div>
+        </div>
+      )}
+    </div>
   );
 }
 

@@ -31,16 +31,28 @@ function dateTimeLabel(field: string) {
   };
 }
 
+// quyhoachbatdau/quyhoachketthuc chỉ là mốc ngày (không có giờ phút), nên dùng
+// định dạng ngày thuần thay vì dateTimeLabel để khỏi hiện "00:00" vô nghĩa.
+function dateLabel(field: string) {
+  return (item: CatalogRecord): string => {
+    const raw = item[field];
+    if (!raw || typeof raw !== "string") return "-";
+    const date = new Date(raw);
+    if (Number.isNaN(date.getTime())) return "-";
+    return date.toLocaleDateString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh", day: "2-digit", month: "2-digit", year: "numeric" });
+  };
+}
+
 export const LAND_CONFIG: CollectionDashboardConfig = {
   title: "Đất đai, địa chính", kicker: "Đất đai", description: "Tra cứu danh sách và thông tin thửa đất.", searchPlaceholder: "Tìm số thửa, địa chỉ...", icon: "dataset", color: "#2d9b68", collections: [{
     collection: "thua_dat", label: "Thửa đất", fields: ["id", "so_thu_tu_thua", "so_hieu_to_ban_do", "dia_chi", "ma_xa", "ten_xa", "dien_tich", "muc_dich_su_dung", "chu_so_huu", "co_giay_phep", "ghi_chu", "date_updated"],
-    columns: [{ field: "so_thu_tu_thua", label: "Số thửa" }, { field: "dia_chi", label: "Địa chỉ" }, { field: "ten_xa", label: "Phường, xã" }, { field: "dien_tich", label: "Diện tích" }, { field: "muc_dich_su_dung", label: "Mục đích sử dụng" }, { field: "date_updated", label: "Cập nhật cuối", render: dateTimeLabel("date_updated") }],
+    columns: [{ field: "so_thu_tu_thua", label: "Số thửa", width: "6.5rem" }, { field: "dia_chi", label: "Địa chỉ" }, { field: "ten_xa", label: "Phường, xã", width: "9rem" }, { field: "dien_tich", label: "Diện tích", width: "7rem" }, { field: "muc_dich_su_dung", label: "Mục đích sử dụng", width: "9rem", tone: () => "neutral" }, { field: "date_updated", label: "Cập nhật cuối", width: "9.5rem", render: dateTimeLabel("date_updated") }],
     detailFields: [{ field: "so_thu_tu_thua", label: "Số thửa" }, { field: "so_hieu_to_ban_do", label: "Số tờ bản đồ" }, { field: "dia_chi", label: "Địa chỉ" }, { field: "ma_xa", label: "Mã xã" }, { field: "ten_xa", label: "Tên xã" }, { field: "dien_tich", label: "Diện tích" }, { field: "muc_dich_su_dung", label: "Mục đích sử dụng" }, { field: "chu_so_huu", label: "Chủ sử dụng", render: ownerLabel }, { field: "co_giay_phep", label: "Giấy phép", render: booleanLabel("co_giay_phep") }, { field: "date_updated", label: "Cập nhật cuối", render: dateTimeLabel("date_updated") }, { field: "ghi_chu", label: "Ghi chú" }], titleField: "so_thu_tu_thua", searchFields: ["so_thu_tu_thua", "so_hieu_to_ban_do", "dia_chi", "ma_xa", "ten_xa"], filterField: "ten_xa", filterLabel: "Phường, xã", geometryField: "geom",
   }],
 };
 
 const planningFields = ["objectid", "madoituong", "ten", "dientich", "diadiem", "loaiquyhoach", "quyhoachbatdau", "quyhoachketthuc", "nguon"];
-const planningColumns = [{ field: "madoituong", label: "Mã dữ liệu" }, { field: "ten", label: "Tên đối tượng" }, { field: "diadiem", label: "Địa điểm" }, { field: "dientich", label: "Diện tích" }, { field: "loaiquyhoach", label: "Loại quy hoạch" }, { field: "quyhoachketthuc", label: "Kết thúc" }];
+const planningColumns = [{ field: "madoituong", label: "Mã dữ liệu" }, { field: "ten", label: "Tên đối tượng" }, { field: "diadiem", label: "Địa điểm" }, { field: "dientich", label: "Diện tích" }, { field: "loaiquyhoach", label: "Loại quy hoạch" }, { field: "quyhoachketthuc", label: "Kết thúc", render: dateLabel("quyhoachketthuc") }];
 
 export const PLANNING_CONFIG: CollectionDashboardConfig = {
   title: "Quy hoạch chuyên ngành", kicker: "Quy hoạch", description: "Tra cứu các lớp dữ liệu định hướng và quy hoạch chuyên ngành.", searchPlaceholder: "Tìm mã, tên, địa điểm...", icon: "map", color: "#3a78c2", collections: [
@@ -90,7 +102,7 @@ export const MONITORING_CONFIG: CollectionDashboardConfig = { title: "Trạm qua
 export const SCIENCE_CONFIG: CollectionDashboardConfig = { title: "Khoa học và công nghệ", kicker: "Khoa học & công nghệ", description: "Tra cứu khu công nghệ cao và cơ sở khoa học công nghệ.", searchPlaceholder: "Tìm mã, tên, địa điểm...", icon: "science", color: "#8260c6", collections: [
   { collection: "gisportal_DinhHuongKhuCongNgheCao_P", label: "Khu công nghệ cao", fields: planningFields, columns: planningColumns, detailFields: planningColumns, titleField: "ten", searchFields: ["madoituong", "ten", "diadiem", "loaiquyhoach"], filterField: "loaiquyhoach", filterLabel: "Loại quy hoạch", geometryField: "geom", idField: "objectid" },
   { collection: "gisportal_HienTrangCoSoKHCN_P", label: "Cơ sở KH&CN hiện trạng", fields: [...currentFields, "phanloai"], columns: [{ field: "madoituong", label: "Mã" }, { field: "ten", label: "Tên" }, { field: "diadiem", label: "Địa điểm" }, { field: "phanloai", label: "Phân loại" }, { field: "loaihientrang", label: "Hiện trạng" }, { field: "nam", label: "Năm" }], detailFields: [...currentFields, { field: "phanloai", label: "Phân loại" }], titleField: "ten", searchFields: ["madoituong", "ten", "diadiem", "phanloai"], filterField: "loaihientrang", filterLabel: "Hiện trạng", geometryField: "geom", idField: "objectid" },
-  { collection: "gisportal_DinhHuongCoSoKHCN_P", label: "Cơ sở KH&CN định hướng", fields: [...planningFields, "phanloai"], columns: [{ field: "madoituong", label: "Mã" }, { field: "ten", label: "Tên" }, { field: "diadiem", label: "Địa điểm" }, { field: "phanloai", label: "Phân loại" }, { field: "loaiquyhoach", label: "Quy hoạch" }, { field: "quyhoachketthuc", label: "Kết thúc" }], detailFields: [...planningFields, { field: "phanloai", label: "Phân loại" }], titleField: "ten", searchFields: ["madoituong", "ten", "diadiem", "phanloai"], filterField: "loaiquyhoach", filterLabel: "Loại quy hoạch", geometryField: "geom", idField: "objectid" },
+  { collection: "gisportal_DinhHuongCoSoKHCN_P", label: "Cơ sở KH&CN định hướng", fields: [...planningFields, "phanloai"], columns: [{ field: "madoituong", label: "Mã" }, { field: "ten", label: "Tên" }, { field: "diadiem", label: "Địa điểm" }, { field: "phanloai", label: "Phân loại" }, { field: "loaiquyhoach", label: "Quy hoạch" }, { field: "quyhoachketthuc", label: "Kết thúc", render: dateLabel("quyhoachketthuc") }], detailFields: [...planningColumns, { field: "phanloai", label: "Phân loại" }], titleField: "ten", searchFields: ["madoituong", "ten", "diadiem", "phanloai"], filterField: "loaiquyhoach", filterLabel: "Loại quy hoạch", geometryField: "geom", idField: "objectid" },
 ] };
 
 // Field thật của "bts" khác hoàn toàn field từng cấu hình trước đó (đã kiểm

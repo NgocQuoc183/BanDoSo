@@ -88,15 +88,25 @@ export function CollectionDashboard({ config, configs }: Props) {
         </div>
       </header>
       <div className="relative flex min-h-[calc(100dvh-4.25rem)]">
-        <aside className="hidden w-[14.5rem] shrink-0 border-r border-line bg-white lg:block">
-          <div className="px-5 py-5 text-[11px] font-bold uppercase tracking-wide text-ink-500">Dữ liệu số hóa</div>
-          {dashboardConfigs.map((item, index) => (
-            <button key={item.title} type="button" onClick={() => changeSection(index)} className="w-full text-left">
-              <SidebarLink active={index === activeIndex} icon={item.icon} color={item.color} label={item.title} />
-            </button>
-          ))}
-          <div className="absolute bottom-5 hidden w-[14.5rem] border-t border-line px-5 pt-4 text-xs text-ink-400 lg:block">
-            <span className="material-symbols-outlined mr-2 align-middle text-[16px]">arrow_back</span><a href="/">Về bản đồ</a>
+        <aside className="hidden w-60 shrink-0 flex-col border-r border-line bg-white lg:flex">
+          <div className="flex items-center gap-2.5 border-b border-line px-4 py-4">
+            <span className="material-symbols-outlined text-[20px] text-accent">dataset</span>
+            <div className="min-w-0">
+              <p className="truncate text-[12.5px] font-extrabold uppercase tracking-wide text-ink-900">Dữ liệu số hóa</p>
+              <p className="text-[10px] text-ink-400">Cổng tra cứu dữ liệu</p>
+            </div>
+          </div>
+          <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 py-2.5">
+            {dashboardConfigs.map((item, index) => (
+              <button key={item.title} type="button" onClick={() => changeSection(index)} className="w-full text-left">
+                <SidebarLink active={index === activeIndex} icon={item.icon} color={item.color} label={item.title} />
+              </button>
+            ))}
+          </nav>
+          <div className="border-t border-line px-2 py-2.5">
+            <a href="/" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-[13px] font-semibold text-ink-500 transition-colors duration-150 hover:bg-surface-muted hover:text-ink-700">
+              <span className="material-symbols-outlined text-[19px]">arrow_back</span>Về bản đồ
+            </a>
           </div>
         </aside>
         <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 lg:px-7">
@@ -113,39 +123,70 @@ export function CollectionDashboard({ config, configs }: Props) {
               </button>
             ))}
           </nav>
-          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em]" style={{ color: activeConfig.color }}>{activeConfig.kicker}</p>
-              <h1 className="mt-1 text-lg font-extrabold text-ink-900">{activeConfig.title}</h1>
-              <p className="mt-1 text-xs text-ink-400">{activeConfig.description}</p>
+
+          <div className="mb-5">
+            <div aria-label="breadcrumb" className="mb-2 flex items-center gap-1 text-[11px] text-ink-400">
+              <span>Dữ liệu số hóa</span>
+              <span className="material-symbols-outlined text-[13px]">chevron_right</span>
+              <span className="font-medium text-ink-500">{activeConfig.title}</span>
             </div>
-            <button type="button" onClick={() => void handleExport()} disabled={exporting} className="flex h-9 items-center gap-2 rounded-md border border-accent px-3 text-xs font-bold text-accent-dark transition-colors duration-150 hover:bg-accent-soft disabled:opacity-50">
-              <span className="material-symbols-outlined text-[17px]">description</span>{exporting ? "Đang xuất..." : "Xuất báo cáo"}
-            </button>
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div className="min-w-0">
+                <span
+                  className="inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em]"
+                  style={{ color: activeConfig.color, backgroundColor: `${activeConfig.color}17` }}
+                >
+                  {activeConfig.kicker}
+                </span>
+                <h1 className="mt-2 text-2xl font-extrabold tracking-tight text-ink-900">{activeConfig.title}</h1>
+                <p className="mt-1 text-xs text-ink-500">{activeConfig.description}</p>
+              </div>
+              <button type="button" onClick={() => void handleExport()} disabled={exporting} className="flex h-10 shrink-0 items-center gap-2 rounded-md border border-line bg-white px-4 text-xs font-bold text-ink-700 shadow-card transition-colors duration-150 hover:border-accent hover:text-accent-dark disabled:opacity-50">
+                <span className="material-symbols-outlined text-[18px]">description</span>{exporting ? "Đang xuất..." : "Xuất báo cáo"}
+              </button>
+            </div>
           </div>
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <label className="flex h-9 min-w-[15rem] flex-1 items-center gap-2 rounded-md border border-line bg-white px-3 transition-colors duration-150 focus-within:border-accent sm:max-w-[25rem]">
-              <span className="material-symbols-outlined text-[18px] text-ink-400">search</span>
-              <input value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder={activeConfig.searchPlaceholder} className="min-w-0 flex-1 text-xs outline-none placeholder:text-ink-300" />
-            </label>
-            <select value={collection} onChange={(event) => reset(event.target.value)} className="h-9 min-w-[13rem] rounded-md border border-line bg-white px-3 text-xs text-ink-500 outline-none transition-colors duration-150 hover:border-line-strong">
-              {activeConfig.collections.map((item) => <option key={item.collection} value={item.collection}>{item.label}</option>)}
-            </select>
-            {selectedConfig.filterField && (
-              <input value={filterInput} onChange={(event) => setFilterInput(event.target.value)} placeholder={selectedConfig.filterLabel} className="h-9 min-w-[10rem] rounded-md border border-line bg-white px-3 text-xs text-ink-500 outline-none transition-colors duration-150 placeholder:text-ink-300 focus:border-accent" />
-            )}
-            <button type="button" onClick={() => reset()} className="h-9 rounded-md px-2 text-xs font-semibold text-ink-400 transition-colors duration-150 hover:bg-white">Xóa lọc</button>
+
+          <div className="mb-4 rounded-lg border border-line bg-white p-3 shadow-card">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:items-end lg:grid-cols-[1.7fr_1fr_1fr_auto]">
+              <div>
+                <label className="mb-1 block text-[10px] font-bold uppercase tracking-wide text-ink-400">Tìm kiếm</label>
+                <div className="flex h-10 items-center gap-2 rounded-md border border-line bg-surface-muted px-3 transition-colors duration-150 focus-within:border-accent focus-within:bg-white">
+                  <span className="material-symbols-outlined text-[18px] text-ink-400">search</span>
+                  <input value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder={activeConfig.searchPlaceholder} className="min-w-0 flex-1 bg-transparent text-xs outline-none placeholder:text-ink-300" />
+                </div>
+              </div>
+              <div>
+                <label className="mb-1 block text-[10px] font-bold uppercase tracking-wide text-ink-400">Loại dữ liệu</label>
+                <select value={collection} onChange={(event) => reset(event.target.value)} className="h-10 w-full rounded-md border border-line bg-surface-muted px-3 text-xs text-ink-700 outline-none transition-colors duration-150 hover:border-line-strong focus:border-accent focus:bg-white">
+                  {activeConfig.collections.map((item) => <option key={item.collection} value={item.collection}>{item.label}</option>)}
+                </select>
+              </div>
+              {selectedConfig.filterField ? (
+                <div>
+                  <label className="mb-1 block text-[10px] font-bold uppercase tracking-wide text-ink-400">{selectedConfig.filterLabel}</label>
+                  <input value={filterInput} onChange={(event) => setFilterInput(event.target.value)} placeholder={selectedConfig.filterLabel} className="h-10 w-full rounded-md border border-line bg-surface-muted px-3 text-xs text-ink-700 outline-none transition-colors duration-150 placeholder:text-ink-300 focus:border-accent focus:bg-white" />
+                </div>
+              ) : <div className="hidden lg:block" />}
+              <button type="button" onClick={() => reset()} className="flex h-10 items-center justify-center gap-1.5 rounded-md border border-line px-3.5 text-xs font-semibold text-ink-500 transition-colors duration-150 hover:border-line-strong hover:bg-surface-muted">
+                <span className="material-symbols-outlined text-[16px]">delete_sweep</span>Xóa lọc
+              </button>
+            </div>
           </div>
+
           <section className="overflow-hidden rounded-lg border border-line bg-white shadow-card">
-            <div className="flex items-center justify-between border-b border-line px-3 py-2.5 text-xs text-ink-400">
-              <span>Hiển thị {result.items.length} trong tổng số {result.total === null ? "-" : result.total.toLocaleString()} kết quả</span>
-              <span>Trang {page}/{totalPages}</span>
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-3">
+              <div className="flex items-baseline gap-2">
+                <span className="text-lg font-extrabold tabular-nums text-ink-900">{result.total === null ? "-" : result.total.toLocaleString("vi")}</span>
+                <span className="text-xs font-medium text-ink-400">kết quả · {selectedConfig.label}</span>
+              </div>
+              <span className="text-[11px] font-medium text-ink-400">Hiển thị {result.items.length} bản ghi · Trang {page}/{totalPages}</span>
             </div>
             {error && <div className="m-3 rounded-md border border-danger/25 bg-danger-soft px-3 py-2 text-xs text-danger">{error}</div>}
             <div className="overflow-x-auto">
               <table className="w-full min-w-[850px] border-collapse text-left text-xs">
-                <thead className="bg-surface-muted text-[10px] font-bold uppercase tracking-wide text-ink-500">
-                  <tr>{selectedConfig.columns.map((column) => <th key={column.field} className="px-3 py-3">{column.label}</th>)}</tr>
+                <thead className="border-b border-line-strong bg-surface-muted text-[10.5px] font-bold uppercase tracking-wide text-ink-500">
+                  <tr>{selectedConfig.columns.map((column) => <th key={column.field} style={column.width ? { width: column.width, minWidth: column.width } : undefined} className="px-4 py-3.5">{column.label}</th>)}</tr>
                 </thead>
                 <tbody className="divide-y divide-line">
                   {loading ? (
@@ -157,7 +198,7 @@ export function CollectionDashboard({ config, configs }: Props) {
                       {selectedConfig.columns.map((column) => {
                         const value = column.render ? column.render(item) : display(item[column.field]);
                         return (
-                          <td key={column.field} className="max-w-[15rem] truncate px-3 py-3" title={value}>
+                          <td key={column.field} style={{ maxWidth: column.width ?? "15rem" }} className="truncate px-4 py-3" title={value}>
                             {column.tone ? <Badge tone={column.tone(item)}>{value}</Badge> : value}
                           </td>
                         );
@@ -167,12 +208,17 @@ export function CollectionDashboard({ config, configs }: Props) {
                 </tbody>
               </table>
             </div>
-            <div className="flex items-center justify-between border-t border-line px-3 py-2.5">
-              <span className="text-[11px] text-ink-400">{selectedConfig.label}</span>
-              <div className="flex gap-1">
-                <PageButton label="chevron_left" disabled={page <= 1 || loading} onClick={() => setPage((current) => current - 1)} />
-                <span className="flex h-7 min-w-7 items-center justify-center rounded bg-accent px-2 text-[11px] font-bold text-white">{page}</span>
-                <PageButton label="chevron_right" disabled={page >= totalPages || loading} onClick={() => setPage((current) => current + 1)} />
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-4 py-3">
+              <span className="text-[11px] font-medium text-ink-400">
+                {result.items.length === 0
+                  ? "Không có kết quả"
+                  : `Hiển thị ${((page - 1) * PAGE_SIZE + 1).toLocaleString("vi")}–${((page - 1) * PAGE_SIZE + result.items.length).toLocaleString("vi")} / ${result.total === null ? "-" : result.total.toLocaleString("vi")}`}
+              </span>
+              <div className="flex items-center gap-1.5">
+                <PageNavButton direction="prev" disabled={page <= 1 || loading} onClick={() => setPage((current) => current - 1)} />
+                <span className="flex h-8 min-w-8 items-center justify-center rounded-md bg-accent px-2 text-[11px] font-bold text-white">{page}</span>
+                <span className="px-0.5 text-[11px] text-ink-400">/ {totalPages.toLocaleString("vi")}</span>
+                <PageNavButton direction="next" disabled={page >= totalPages || loading} onClick={() => setPage((current) => current + 1)} />
               </div>
             </div>
           </section>
@@ -183,20 +229,24 @@ export function CollectionDashboard({ config, configs }: Props) {
   );
 }
 
-function SidebarLink({ icon, color, label, href, active = false }: { icon: string; color: string; label: string; href?: string; active?: boolean }) {
-  const content = (
-    <div className={`flex items-center gap-3 border-l-2 px-4 py-3 text-xs font-semibold transition-colors duration-150 ${active ? "border-accent bg-accent-soft text-accent-dark" : "border-transparent text-ink-500 hover:bg-surface-muted"}`}>
-      <span className="material-symbols-outlined text-[19px]" style={{ color }}>{icon}</span>
-      {label}
+function SidebarLink({ icon, color, label, active = false }: { icon: string; color: string; label: string; active?: boolean }) {
+  return (
+    <div className={`relative flex items-center gap-3 rounded-md px-3 py-2.5 text-[13px] font-semibold transition-colors duration-150 ${active ? "bg-accent-soft text-accent-dark" : "text-ink-500 hover:bg-surface-muted hover:text-ink-700"}`}>
+      {active && <span className="absolute inset-y-1.5 left-0 w-[3px] rounded-full bg-accent" />}
+      <span className="material-symbols-outlined text-[19px]" style={{ color: active ? "var(--color-accent)" : color }}>{icon}</span>
+      <span className="truncate">{label}</span>
     </div>
   );
-  return href ? <a href={href}>{content}</a> : content;
 }
 
-function PageButton({ label, disabled, onClick }: { label: string; disabled: boolean; onClick: () => void }) {
+function PageNavButton({ direction, disabled, onClick }: { direction: "prev" | "next"; disabled: boolean; onClick: () => void }) {
+  const icon = direction === "prev" ? "chevron_left" : "chevron_right";
+  const label = direction === "prev" ? "Trước" : "Sau";
   return (
-    <button type="button" aria-label={label} disabled={disabled} onClick={onClick} className="flex h-7 w-7 items-center justify-center rounded border border-line text-ink-500 transition-colors duration-150 enabled:hover:border-accent enabled:hover:text-accent disabled:opacity-35">
-      <span className="material-symbols-outlined text-[16px]">{label}</span>
+    <button type="button" aria-label={label} disabled={disabled} onClick={onClick} className="flex h-8 items-center gap-1 rounded-md border border-line px-2.5 text-[11px] font-semibold text-ink-500 transition-colors duration-150 enabled:hover:border-accent enabled:hover:text-accent-dark disabled:opacity-35">
+      {direction === "prev" && <span className="material-symbols-outlined text-[15px]">{icon}</span>}
+      {label}
+      {direction === "next" && <span className="material-symbols-outlined text-[15px]">{icon}</span>}
     </button>
   );
 }

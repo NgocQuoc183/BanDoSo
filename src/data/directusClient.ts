@@ -7,7 +7,9 @@ export type CatalogRecord = { id?: string | number; [key: string]: unknown };
 // `tone` (tuỳ chọn) đánh dấu cột trạng thái để bảng hiển thị dạng badge màu
 // thay vì chữ thường — chỉ set khi field có tập giá trị cố định (enum), không
 // áp cho các field hiện trạng tự do (chuỗi mô tả dài, không có màu chuẩn).
-export type CatalogColumn = { field: string; label: string; render?: (item: CatalogRecord) => string; tone?: (item: CatalogRecord) => BadgeTone };
+// `width` (tuỳ chọn) chỉ là gợi ý bề rộng cột cho bảng — cột không set sẽ co giãn
+// tự nhiên theo nội dung như trước, không bắt buộc phải khai báo cho mọi collection.
+export type CatalogColumn = { field: string; label: string; render?: (item: CatalogRecord) => string; tone?: (item: CatalogRecord) => BadgeTone; width?: string };
 export type CatalogDetailField = string | { field: string; label: string; render?: (item: CatalogRecord) => string };
 export type CatalogCollectionConfig = {
   collection: string;
