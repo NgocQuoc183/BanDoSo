@@ -21,9 +21,20 @@ const ROUTES = [
   { prefix: "/api/tiles/huecity", target: HUECITY_TILE_BASE_URL, authorization: huecityTileAuth },
 ];
 
+// Proxy này công khai (không xác thực phía client) nhưng gắn kèm token admin
+// thật ở mọi request forward đi — nếu cho qua POST/PATCH/DELETE, bất kỳ ai
+// cũng có thể ghi/xóa dữ liệu Directus thật qua đường này. App chỉ cần đọc dữ
+// liệu nên chỉ cho phép GET/HEAD, chặn cứng mọi method khác tại đây thay vì
+// dựa vào quyền hạn cấu hình phía Directus.
+const ALLOWED_METHODS = new Set(["GET", "HEAD"]);
+
 const server = createServer(async (req, res) => {
   if (!req.url || !req.method) {
     res.writeHead(400).end();
+    return;
+  }
+  if (!ALLOWED_METHODS.has(req.method)) {
+    res.writeHead(405, { "content-type": "text/plain", "allow": "GET, HEAD" }).end("Method Not Allowed");
     return;
   }
   const route = ROUTES.find((item) => req.url.startsWith(item.prefix));
