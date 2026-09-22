@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import type { Geometry } from "geojson";
 import { fetchAllCollectionRecords, fetchCollectionRecords, fetchRecordGeometry, type CatalogCollectionConfig, type CatalogRecord, type CollectionDashboardConfig } from "../data/directusClient";
 import { FeatureMiniMap } from "./FeatureMiniMap";
@@ -71,17 +72,17 @@ export function CollectionDashboard({ config, configs }: Props) {
   return (
     <div className="min-h-dvh bg-surface text-ink-900">
       <header className="flex min-h-[4.25rem] items-center gap-4 border-b border-line bg-white px-5 shadow-header">
-        <a href="/" className="flex min-w-0 items-center gap-3 text-ink-900 transition-opacity duration-150 hover:opacity-80" title="Về bản đồ">
+        <Link to="/" className="flex min-w-0 items-center gap-3 text-ink-900 transition-opacity duration-150 hover:opacity-80" title="Về bản đồ">
           <img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" />
           <span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span>
-        </a>
+        </Link>
         <div className="ml-auto flex items-center gap-3">
-          <a href="/monitoring" className="flex h-9 items-center gap-2 rounded-md border border-line px-3 text-xs font-semibold text-ink-500 transition-colors duration-150 hover:border-line-strong hover:bg-surface-muted">
+          <Link to="/monitoring" className="flex h-9 items-center gap-2 rounded-md border border-line px-3 text-xs font-semibold text-ink-500 transition-colors duration-150 hover:border-line-strong hover:bg-surface-muted">
             <span className="material-symbols-outlined text-[17px]">sensors</span>Trạm quan trắc
-          </a>
-          <a href="/overview" className="flex h-9 items-center gap-2 rounded-md border border-line px-3 text-xs font-semibold text-ink-500 transition-colors duration-150 hover:border-line-strong hover:bg-surface-muted">
+          </Link>
+          <Link to="/overview" className="flex h-9 items-center gap-2 rounded-md border border-line px-3 text-xs font-semibold text-ink-500 transition-colors duration-150 hover:border-line-strong hover:bg-surface-muted">
             <span className="material-symbols-outlined text-[17px]">analytics</span>Tổng quan thống kê
-          </a>
+          </Link>
           <span className="hidden h-9 w-9 items-center justify-center rounded-full bg-accent-soft text-accent-dark sm:flex">
             <span className="material-symbols-outlined">person</span>
           </span>
@@ -104,9 +105,9 @@ export function CollectionDashboard({ config, configs }: Props) {
             ))}
           </nav>
           <div className="border-t border-line px-2 py-2.5">
-            <a href="/" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-[13px] font-semibold text-ink-500 transition-colors duration-150 hover:bg-surface-muted hover:text-ink-700">
+            <Link to="/" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-[13px] font-semibold text-ink-500 transition-colors duration-150 hover:bg-surface-muted hover:text-ink-700">
               <span className="material-symbols-outlined text-[19px]">arrow_back</span>Về bản đồ
-            </a>
+            </Link>
           </div>
         </aside>
         <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 lg:px-7">
@@ -280,9 +281,9 @@ function DetailPanel({ item, config, color, onClose }: { item: CatalogRecord; co
       {geometry && (
         <div className="border-b border-line px-5 py-4">
           <FeatureMiniMap geometry={geometry} color={color} />
-          <a href={`/?focus=${encodeURIComponent(config.collection)}:${encodeURIComponent(String(id))}`} className="mt-3 flex h-9 items-center justify-center gap-2 rounded-md bg-accent text-xs font-bold text-white transition-colors duration-150 hover:bg-accent-dark">
+          <Link to={`/?focus=${encodeURIComponent(config.collection)}:${encodeURIComponent(String(id))}`} className="mt-3 flex h-9 items-center justify-center gap-2 rounded-md bg-accent text-xs font-bold text-white transition-colors duration-150 hover:bg-accent-dark">
             <span className="material-symbols-outlined text-[16px]">location_on</span>Định vị trên bản đồ
-          </a>
+          </Link>
         </div>
       )}
       <div className="space-y-4 px-5 py-5">

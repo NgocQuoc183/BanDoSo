@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import maplibregl from "maplibre-gl";
 import { STYLE_URL, transformTileRequest } from "../map/mapClient";
 import {
@@ -189,8 +190,8 @@ export function MonitoringDashboard() {
 
   return <div className="flex h-dvh flex-col bg-surface text-ink-900">
     <header className="flex min-h-[4.25rem] shrink-0 items-center gap-4 border-b border-line bg-white px-5 shadow-header">
-      <a href="/" className="flex min-w-0 items-center gap-3 text-ink-900 transition-opacity duration-150 hover:opacity-80" title="Về bản đồ"><img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" /><span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span></a>
-      <a href="/statics" className="ml-auto flex h-9 items-center gap-2 rounded-md border border-line px-3 text-xs font-semibold text-ink-500 transition-colors duration-150 hover:border-line-strong hover:bg-surface-muted"><span className="material-symbols-outlined text-[17px]">layers</span>Danh sách chi tiết</a>
+      <Link to="/" className="flex min-w-0 items-center gap-3 text-ink-900 transition-opacity duration-150 hover:opacity-80" title="Về bản đồ"><img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" /><span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span></Link>
+      <Link to="/statics" className="ml-auto flex h-9 items-center gap-2 rounded-md border border-line px-3 text-xs font-semibold text-ink-500 transition-colors duration-150 hover:border-line-strong hover:bg-surface-muted"><span className="material-symbols-outlined text-[17px]">layers</span>Danh sách chi tiết</Link>
     </header>
     <div className="flex shrink-0 items-center gap-1.5 overflow-x-auto border-b border-line bg-white px-3 py-2 lg:hidden">
       {MONITORING_STATION_TYPES.map((type, index) => (
@@ -230,9 +231,9 @@ export function MonitoringDashboard() {
           ))}
         </nav>
         <div className="border-t border-line px-2 py-2.5">
-          <a href="/" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-[13px] font-semibold text-ink-500 transition-colors duration-150 hover:bg-surface-muted hover:text-ink-700">
+          <Link to="/" className="flex items-center gap-3 rounded-md px-3 py-2.5 text-[13px] font-semibold text-ink-500 transition-colors duration-150 hover:bg-surface-muted hover:text-ink-700">
             <span className="material-symbols-outlined text-[19px]">arrow_back</span>Về bản đồ
-          </a>
+          </Link>
         </div>
       </aside>
       {!stationsLoading && (

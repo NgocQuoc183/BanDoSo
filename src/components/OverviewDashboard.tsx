@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   countCollection,
   fetchDailyTrend,
@@ -69,8 +70,8 @@ export function OverviewDashboard() {
 
   return <div className="min-h-dvh bg-surface text-ink-900">
     <header className="flex min-h-[4.25rem] items-center gap-4 border-b border-line bg-white px-5 shadow-header">
-      <a href="/" className="flex min-w-0 items-center gap-3 text-ink-900 transition-opacity duration-150 hover:opacity-80" title="Về bản đồ"><img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" /><span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span></a>
-      <a href="/statics" className="ml-auto flex h-9 items-center gap-2 rounded-md border border-line px-3 text-xs font-semibold text-ink-500 transition-colors duration-150 hover:border-line-strong hover:bg-surface-muted"><span className="material-symbols-outlined text-[17px]">layers</span>Xem danh sách chi tiết</a>
+      <Link to="/" className="flex min-w-0 items-center gap-3 text-ink-900 transition-opacity duration-150 hover:opacity-80" title="Về bản đồ"><img src="/images/logo/Logo_IOC.png" alt="IOC Huế" className="h-10 w-14 object-contain" /><span className="truncate text-base font-extrabold uppercase tracking-[-0.02em]">Hệ thống bản đồ số theo dõi dữ liệu số hóa</span></Link>
+      <Link to="/statics" className="ml-auto flex h-9 items-center gap-2 rounded-md border border-line px-3 text-xs font-semibold text-ink-500 transition-colors duration-150 hover:border-line-strong hover:bg-surface-muted"><span className="material-symbols-outlined text-[17px]">layers</span>Xem danh sách chi tiết</Link>
     </header>
     <main className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-7">
       <div className="mb-5 flex flex-wrap items-end justify-between gap-3">

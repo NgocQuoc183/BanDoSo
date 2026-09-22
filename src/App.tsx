@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Route, Routes } from "react-router-dom";
 import { AdministrativeMenu } from "./components/AdministrativeMenu";
 import { AppFooter, AppHeader } from "./components/Layout";
 import type { HeaderSearchResult } from "./components/Layout";
@@ -15,10 +16,15 @@ import { MonitoringDashboard } from "./components/MonitoringDashboard";
 import { ENVIRONMENT_CONFIG, LAND_CONFIG, MONITORING_CONFIG, PLANNING_CONFIG, SCIENCE_CONFIG, TELECOM_CONFIG } from "./data/dashboardConfigs";
 
 export default function App() {
-  if (window.location.pathname === "/overview") return <OverviewDashboard />;
-  if (window.location.pathname === "/monitoring") return <MonitoringDashboard />;
-  if (window.location.pathname === "/statics" || window.location.pathname === "/dashboard") return <CollectionDashboard configs={[LAND_CONFIG, PLANNING_CONFIG, ENVIRONMENT_CONFIG, MONITORING_CONFIG, SCIENCE_CONFIG, TELECOM_CONFIG]} />;
-  return <MapApp />;
+  return (
+    <Routes>
+      <Route path="/overview" element={<OverviewDashboard />} />
+      <Route path="/monitoring" element={<MonitoringDashboard />} />
+      <Route path="/statics" element={<CollectionDashboard configs={[LAND_CONFIG, PLANNING_CONFIG, ENVIRONMENT_CONFIG, MONITORING_CONFIG, SCIENCE_CONFIG, TELECOM_CONFIG]} />} />
+      <Route path="/dashboard" element={<CollectionDashboard configs={[LAND_CONFIG, PLANNING_CONFIG, ENVIRONMENT_CONFIG, MONITORING_CONFIG, SCIENCE_CONFIG, TELECOM_CONFIG]} />} />
+      <Route path="*" element={<MapApp />} />
+    </Routes>
+  );
 }
 
 function MapApp() {

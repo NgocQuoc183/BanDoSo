@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { appLanguage, getLocalizedDataValue } from "../i18n/localizedData";
 import { PROJECT_CATEGORIES } from "../map/projectLayers";
 import type {
@@ -71,10 +72,10 @@ export function DataOverviewPanel({
         </p>
       </div>
       <div className="shrink-0 border-t border-line px-4 py-3">
-        <a href="/statics" className="flex h-9 items-center justify-center gap-2 rounded-md bg-accent text-xs font-bold text-white transition-colors duration-150 hover:bg-accent-dark">
+        <Link to="/statics" className="flex h-9 items-center justify-center gap-2 rounded-md bg-accent text-xs font-bold text-white transition-colors duration-150 hover:bg-accent-dark">
           <span className="material-symbols-outlined text-[17px]">open_in_new</span>
           {t("overview.viewDetails")}
-        </a>
+        </Link>
       </div>
     </section>
   );
